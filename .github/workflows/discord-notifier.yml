@@ -1,0 +1,25 @@
+name: Ječná C3a Suplování Notifier
+
+on:
+  schedule:
+    # Run every 30 minutes Monday to Friday from 05:00 to 19:00 UTC
+    - cron: '*/30 5-19 * * 1-5'
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  check-and-notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run Suplování Check
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          python3 supl_service.py --cron

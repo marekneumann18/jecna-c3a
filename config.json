@@ -1,0 +1,10 @@
+{
+  "target_class": "C3a",
+  "discord_webhook_url": "https://discordapp.com/api/webhooks/1567620165120565298/3txZfFGs72tlu-h8oLjsMZEeI6oHNtWPqlic8PsmEEBxzwjF-ioljgTbEjpNyECxSr0h",
+  "check_interval_seconds": 300,
+  "port": 8080,
+  "notify_on_in_work": true,
+  "last_sent_hashes": {
+    "2026-11-04": "99286be9ca2cf47f94bf968d6c6b3d0d"
+  }
+}

@@ -1,0 +1,140 @@
+{
+  "class": "C3a",
+  "school_year": "2026/2027",
+  "timetable": {
+    "0": {
+      "day_name": "Pondělí",
+      "periods": {
+        "1": { "subject": "C", "teacher": "Mr", "room": "28", "group": "celá" },
+        "2": [
+          { "subject": "A", "teacher": "Ir", "room": "5b", "group": "1/2" },
+          { "subject": "A", "teacher": "Pa", "room": "29", "group": "2/2" }
+        ],
+        "3": { "subject": "M", "teacher": "Hr", "room": "28", "group": "celá" },
+        "4": { "subject": "TI", "teacher": "We", "room": "28", "group": "celá" },
+        "5": null,
+        "6": [
+          { "subject": "MVH", "teacher": "Sb", "room": "19a", "group": "1/2" },
+          { "subject": "MVH", "teacher": "Pp", "room": "19b", "group": "2/2" }
+        ],
+        "7": [
+          { "subject": "MVH", "teacher": "Sb", "room": "19a", "group": "1/2" },
+          { "subject": "MVH", "teacher": "Pp", "room": "19b", "group": "2/2" }
+        ],
+        "8": { "subject": "TV", "teacher": "Ku", "room": "TV", "group": "celá" },
+        "9": null,
+        "10": null
+      }
+    },
+    "1": {
+      "day_name": "Úterý",
+      "periods": {
+        "1": [
+          { "subject": "PV", "teacher": "Sd", "room": "18b", "group": "1/2" },
+          { "subject": "PV", "teacher": "Re", "room": "18a", "group": "2/2" }
+        ],
+        "2": [
+          { "subject": "PV", "teacher": "Sd", "room": "18b", "group": "1/2" },
+          { "subject": "PV", "teacher": "Re", "room": "18a", "group": "2/2" }
+        ],
+        "3": [
+          { "subject": "WA", "teacher": "Me", "room": "19b", "group": "1/2" },
+          { "subject": "WA", "teacher": "Pp", "room": "19a", "group": "2/2" }
+        ],
+        "4": [
+          { "subject": "WA", "teacher": "Me", "room": "19b", "group": "1/2" },
+          { "subject": "WA", "teacher": "Pp", "room": "19a", "group": "2/2" }
+        ],
+        "5": { "subject": "A", "teacher": "Pa", "room": "28", "group": "2/2" },
+        "6": { "subject": "A", "teacher": "Ir", "room": "5b", "group": "1/2" },
+        "7": [
+          { "subject": "PSS", "teacher": "Ms", "room": "8a", "group": "1/2" },
+          { "subject": "DS", "teacher": "Ka", "room": "17a", "group": "2/2" }
+        ],
+        "8": [
+          { "subject": "PSS", "teacher": "Ms", "room": "8a", "group": "1/2" },
+          { "subject": "DS", "teacher": "Ka", "room": "17a", "group": "2/2" }
+        ],
+        "9": null,
+        "10": null
+      }
+    },
+    "2": {
+      "day_name": "Středa",
+      "periods": {
+        "1": { "subject": "C", "teacher": "Mr", "room": "28", "group": "celá" },
+        "2": { "subject": "EK", "teacher": "Bc", "room": "28", "group": "celá" },
+        "3": { "subject": "WA", "teacher": "Pp", "room": "28", "group": "celá" },
+        "4": { "subject": "PV", "teacher": "Re", "room": "28", "group": "celá" },
+        "5": { "subject": "TV", "teacher": "Ku", "room": "TV", "group": "celá" },
+        "6": { "subject": "TI", "teacher": "We", "room": "28", "group": "celá" },
+        "7": { "subject": "DS", "teacher": "Ka", "room": "28", "group": "celá" },
+        "8": null,
+        "9": null,
+        "10": null
+      }
+    },
+    "3": {
+      "day_name": "Čtvrtek",
+      "periods": {
+        "1": [
+          { "subject": "A", "teacher": "Ir", "room": "5b", "group": "1/2" },
+          { "subject": "A", "teacher": "Pa", "room": "28", "group": "2/2" }
+        ],
+        "2": { "subject": "EK", "teacher": "Bc", "room": "28", "group": "celá" },
+        "3": { "subject": "M", "teacher": "Hr", "room": "28", "group": "celá" },
+        "4": { "subject": "PSS", "teacher": "Ms", "room": "28", "group": "celá" },
+        "5": [
+          { "subject": "CIT", "teacher": "Sv", "room": "L3", "group": "1/2" },
+          { "subject": "CIT", "teacher": "Nm", "room": "19c", "group": "2/2" }
+        ],
+        "6": [
+          { "subject": "CIT", "teacher": "Sv", "room": "L3", "group": "1/2" },
+          { "subject": "CIT", "teacher": "Nm", "room": "19c", "group": "2/2" }
+        ],
+        "7": { "subject": "C", "teacher": "Mr", "room": "28", "group": "celá" },
+        "8": null,
+        "9": null,
+        "10": null
+      }
+    },
+    "4": {
+      "day_name": "Pátek",
+      "periods": {
+        "1": { "subject": "M", "teacher": "Hr", "room": "28", "group": "celá" },
+        "2": [
+          { "subject": "A", "teacher": "Ir", "room": "28", "group": "1/2" },
+          { "subject": "A", "teacher": "Pa", "room": "29", "group": "2/2" }
+        ],
+        "3": [
+          { "subject": "DS", "teacher": "Ka", "room": "19c", "group": "1/2" },
+          { "subject": "PSS", "teacher": "Mo", "room": "8a", "group": "2/2" }
+        ],
+        "4": [
+          { "subject": "DS", "teacher": "Ka", "room": "19c", "group": "1/2" },
+          { "subject": "PSS", "teacher": "Mo", "room": "8a", "group": "2/2" }
+        ],
+        "5": { "subject": "EK", "teacher": "Bc", "room": "28", "group": "celá" },
+        "6": null,
+        "7": null,
+        "8": null,
+        "9": null,
+        "10": null
+      }
+    }
+  },
+  "subjects": {
+    "PV": "Programové vybavení",
+    "WA": "Webové aplikace",
+    "DS": "Databázové systémy",
+    "PSS": "Počítačové sítě a systémy",
+    "CIT": "Cvičení z informatiky",
+    "MVH": "Multimedia a vývoj her",
+    "EK": "Ekonomika",
+    "TI": "Teoretická informatika",
+    "C": "Český jazyk",
+    "M": "Matematika",
+    "A": "Anglický jazyk",
+    "TV": "Tělesná výchova"
+  }
+}
