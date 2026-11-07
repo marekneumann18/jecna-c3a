@@ -4,6 +4,7 @@
   "check_interval_seconds": 300,
   "port": 8080,
   "notify_on_in_work": true,
+  "selected_group": "all",
   "last_sent_hashes": {
     "2026-11-04": "99286be9ca2cf47f94bf968d6c6b3d0d"
   }

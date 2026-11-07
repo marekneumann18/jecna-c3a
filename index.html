@@ -2,9 +2,14 @@
 <html lang="cs" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Suplování & Rozvrh C3a • SPŠE Ječná</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+  <meta name="theme-color" content="#020617">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Supl C3a">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -29,91 +34,110 @@
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
     .font-mono {
       font-family: 'JetBrains Mono', monospace;
     }
     ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
+      width: 6px;
+      height: 6px;
     }
     ::-webkit-scrollbar-track {
-      background: #0f172a;
+      background: #090d16;
     }
     ::-webkit-scrollbar-thumb {
-      background: #334155;
+      background: #1e293b;
       border-radius: 4px;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: #475569;
+      background: #334155;
+    }
+    .safe-bottom {
+      padding-bottom: max(1rem, env(safe-area-inset-bottom));
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-jecna-500 selection:text-white">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-jecna-500 selection:text-white pb-20 sm:pb-8">
 
   <!-- Top Navigation Bar -->
-  <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md sticky top-0 z-40">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+  <header class="border-b border-slate-800/80 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
       
       <!-- Brand & Class Badge -->
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-jecna-700 to-jecna-500 flex items-center justify-center shadow-lg shadow-jecna-500/20 text-white font-bold text-lg">
+      <div class="flex items-center gap-2.5 sm:gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-jecna-700 to-jecna-500 flex items-center justify-center shadow-lg shadow-jecna-500/25 text-white font-bold text-lg shrink-0">
           ⚡
         </div>
         <div>
-          <div class="flex items-center gap-2">
-            <h1 class="text-lg font-bold tracking-tight text-white">Suplování Ječná</h1>
-            <span class="px-2 py-0.5 rounded-full text-xs font-bold bg-jecna-500/20 text-jecna-400 border border-jecna-500/30">C3a</span>
+          <div class="flex items-center gap-1.5 sm:gap-2">
+            <h1 class="text-base sm:text-lg font-bold tracking-tight text-white">Suplování Ječná</h1>
+            <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-jecna-500/20 text-jecna-400 border border-jecna-500/30">C3a</span>
           </div>
-          <p class="text-xs text-slate-400 hidden sm:block">Rozvrh a automatický hlídač suplu</p>
+          <p class="text-[11px] text-slate-400 hidden sm:block">Rozvrh, testy & úkoly pro třídu C3a</p>
         </div>
       </div>
 
-      <!-- Action Buttons -->
-      <div class="flex items-center gap-2 sm:gap-2.5">
-        <!-- View mode toggle: Suplování vs Stálý rozvrh -->
+      <!-- Desktop Mode Switcher -->
+      <div class="hidden sm:flex items-center gap-2">
         <div class="flex items-center bg-slate-800/90 border border-slate-700/80 p-1 rounded-xl text-xs font-semibold">
-          <button id="tabModeSupl" onclick="switchMainTab('supl')" class="px-3 py-1 rounded-lg bg-jecna-500 text-white shadow transition">
-            Suplování
+          <button id="tabModeSuplDesk" onclick="switchMainTab('supl')" class="px-3.5 py-1.5 rounded-lg bg-jecna-500 text-white shadow transition flex items-center gap-1.5">
+            <span>⚡ Suplování</span>
           </button>
-          <button id="tabModeTimetable" onclick="switchMainTab('timetable')" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white transition">
-            Stálý rozvrh
+          <button id="tabModeTasksDesk" onclick="switchMainTab('tasks')" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1.5">
+            <span>📝 Testy & Úkoly</span>
+            <span id="tasksBadgeDesk" class="hidden px-1.5 py-0.2 rounded-full text-[10px] bg-amber-500/30 text-amber-300 font-bold">0</span>
+          </button>
+          <button id="tabModeTimetableDesk" onclick="switchMainTab('timetable')" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1.5">
+            <span>📚 Stálý rozvrh</span>
           </button>
         </div>
 
-        <!-- Refresh Button -->
-        <button id="btnRefresh" onclick="loadSchedule(true)" class="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium border border-slate-700/80 flex items-center gap-2 transition active:scale-95" title="Obnovit data ze školy">
-          <svg id="refreshIcon" class="w-4 h-4 text-slate-400 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        <!-- Add Test/Homework Quick Button -->
+        <button onclick="openAddTaskModal()" class="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-amber-500/20 transition active:scale-95">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
           </svg>
-          <span class="hidden md:inline">Obnovit</span>
+          <span>Přidat test/úkol</span>
         </button>
 
-        <!-- Discord Config Button -->
-        <button onclick="openDiscordModal()" class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-semibold flex items-center gap-2 shadow-lg shadow-indigo-600/25 transition active:scale-95">
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+        <!-- Discord Button -->
+        <button onclick="openDiscordModal()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700/80 transition active:scale-95" title="Nastavení Discord zpráv">
+          <svg class="w-4 h-4 text-indigo-400" viewBox="0 0 24 24" fill="currentColor">
             <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
           </svg>
-          <span class="hidden sm:inline">Discord zprávy</span>
         </button>
       </div>
+
+      <!-- Mobile Top Action Buttons -->
+      <div class="flex items-center gap-2 sm:hidden">
+        <button onclick="openAddTaskModal()" class="px-2.5 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold text-xs flex items-center gap-1 active:scale-95 shadow">
+          <span>+ Test/Úkol</span>
+        </button>
+        <button onclick="loadSchedule(true)" class="p-2 rounded-lg bg-slate-800 text-slate-300 border border-slate-700/80 active:scale-95" title="Obnovit">
+          <svg id="refreshIconMob" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+        </button>
+      </div>
+
     </div>
   </header>
 
   <!-- Main Container -->
-  <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+  <main class="flex-1 max-w-6xl w-full mx-auto px-3.5 sm:px-6 py-4 sm:py-8 space-y-5">
 
-    <!-- SUPLOVÁNÍ VIEW -->
-    <div id="suplView" class="space-y-6">
+    <!-- 1. SUPLOVÁNÍ VIEW -->
+    <div id="suplView" class="space-y-5">
       <!-- Day Navigation Tabs & Group Filter -->
-      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
-        <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0" id="daysTabsContainer">
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 scroll-smooth no-scrollbar" id="daysTabsContainer">
           <!-- Dynamic Tabs -->
         </div>
 
         <!-- Group Filter -->
-        <div class="flex items-center gap-2 text-xs self-end sm:self-auto shrink-0">
-          <span class="text-slate-400 font-medium">Zobrazit:</span>
+        <div class="flex items-center justify-between sm:justify-end gap-2 text-xs pt-1 sm:pt-0">
+          <span class="text-slate-400 font-medium">Skupina:</span>
           <select id="selectGroupFilter" onchange="changeGroupFilter(this.value)" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-jecna-500">
             <option value="all">Všechny skupiny</option>
             <option value="1">1. skupina (1/2)</option>
@@ -122,31 +146,74 @@
         </div>
       </div>
 
+      <!-- Banner for Tests/Homework on Selected Day (if any) -->
+      <div id="dayTasksBanner" class="hidden"></div>
+
       <!-- Active Day Content Area -->
-      <div id="dayContentArea" class="space-y-6">
+      <div id="dayContentArea" class="space-y-5">
         <div class="animate-pulse space-y-4">
           <div class="h-28 bg-slate-900 border border-slate-800 rounded-2xl"></div>
-          <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
-            <div class="h-32 bg-slate-900/60 rounded-xl border border-slate-800"></div>
-            <div class="h-32 bg-slate-900/60 rounded-xl border border-slate-800"></div>
-            <div class="h-32 bg-slate-900/60 rounded-xl border border-slate-800"></div>
-            <div class="h-32 bg-slate-900/60 rounded-xl border border-slate-800"></div>
-            <div class="h-32 bg-slate-900/60 rounded-xl border border-slate-800"></div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+            <div class="h-28 bg-slate-900/60 rounded-xl border border-slate-800"></div>
+            <div class="h-28 bg-slate-900/60 rounded-xl border border-slate-800"></div>
+            <div class="h-28 bg-slate-900/60 rounded-xl border border-slate-800"></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- STÁLÝ ROZVRH VIEW -->
-    <div id="timetableView" class="hidden space-y-6">
-      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4 shadow-xl">
+    <!-- 2. TESTY & ÚKOLY VIEW -->
+    <div id="tasksView" class="hidden space-y-5">
+      <!-- Section Header -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <span>📝 Testy, písemky & domácí úkoly C3a</span>
+          </h2>
+          <p class="text-xs text-slate-400">Plánovač pro třídu s možností exportu přímo do Google a Apple kalendáře</p>
+        </div>
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <button onclick="openAddTaskModal()" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 active:scale-95 transition">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+            </svg>
+            <span>Přidat záznam</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter chips -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+        <button onclick="filterTasks('all')" id="btnFilterAll" class="px-3 py-1.5 rounded-lg bg-jecna-500 text-white font-semibold whitespace-nowrap transition">
+          Všechny (<span id="countAll">0</span>)
+        </button>
+        <button onclick="filterTasks('test')" id="btnFilterTests" class="px-3 py-1.5 rounded-lg bg-slate-900 text-slate-400 hover:text-white border border-slate-800 font-semibold whitespace-nowrap transition">
+          🔴 Testy & Písemky (<span id="countTests">0</span>)
+        </button>
+        <button onclick="filterTasks('homework')" id="btnFilterHomework" class="px-3 py-1.5 rounded-lg bg-slate-900 text-slate-400 hover:text-white border border-slate-800 font-semibold whitespace-nowrap transition">
+          🟡 Domácí úkoly (<span id="countHomework">0</span>)
+        </button>
+        <button onclick="filterTasks('completed')" id="btnFilterCompleted" class="px-3 py-1.5 rounded-lg bg-slate-900 text-slate-400 hover:text-white border border-slate-800 font-semibold whitespace-nowrap transition">
+          ✅ Splněné (<span id="countCompleted">0</span>)
+        </button>
+      </div>
+
+      <!-- Tasks List Container -->
+      <div id="tasksListContainer" class="space-y-3">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- 3. STÁLÝ ROZVRH VIEW -->
+    <div id="timetableView" class="hidden space-y-5">
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4 shadow-xl">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
           <div>
-            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
               <span>📚 Stálý rozvrh hodin – C3a</span>
-              <span class="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-normal">školní rok 2026/2027</span>
+              <span class="text-[10px] sm:text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-normal">2026/2027</span>
             </h2>
-            <p class="text-xs text-slate-400">Oficiální rozvrh SPŠE Ječná (platný od 1. 9. 2026)</p>
+            <p class="text-xs text-slate-400">Oficiální rozvrh SPŠE Ječná (od 1. 9. 2026)</p>
           </div>
           <div class="flex items-center gap-2 text-xs">
             <span class="text-slate-400">Skupina:</span>
@@ -159,12 +226,12 @@
         </div>
 
         <div class="overflow-x-auto pb-2">
-          <table class="w-full text-xs text-left border-collapse" id="fullTimetableTable">
+          <table class="w-full text-xs text-left border-collapse min-w-[700px]" id="fullTimetableTable">
             <!-- Rendered by JS -->
           </table>
         </div>
 
-        <!-- Subject legend EXACTLY as requested -->
+        <!-- Subject legend -->
         <div class="border-t border-slate-800 pt-4">
           <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Vysvětlivky předmětů C3a</h4>
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-2 text-xs text-slate-300">
@@ -187,21 +254,159 @@
 
   </main>
 
-  <!-- Footer -->
-  <footer class="border-t border-slate-800/80 bg-slate-950 py-6 text-center text-xs text-slate-500">
-    <div class="max-w-6xl mx-auto px-4 space-y-1">
-      <p>Vyvinuto pro studenty <strong class="text-slate-400">SPŠE Ječná</strong> (třída C3a). Synchronizováno se školním SharePointem.</p>
-    </div>
-  </footer>
+  <!-- Mobile Bottom Sticky Navigation Bar -->
+  <nav class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 border-t border-slate-800/90 backdrop-blur-lg px-2 py-1 safe-bottom flex items-center justify-around text-center text-[10px] font-semibold">
+    <button id="navBtnSupl" onclick="switchMainTab('supl')" class="flex-1 py-1.5 flex flex-col items-center gap-1 text-jecna-400 transition">
+      <span class="text-lg">⚡</span>
+      <span>Suplování</span>
+    </button>
+    <button id="navBtnTasks" onclick="switchMainTab('tasks')" class="flex-1 py-1.5 flex flex-col items-center gap-1 text-slate-400 hover:text-white transition relative">
+      <span class="text-lg">📝</span>
+      <span>Testy & Úkoly</span>
+      <span id="tasksBadgeMob" class="hidden absolute top-1 right-5 w-2 h-2 rounded-full bg-amber-400"></span>
+    </button>
+    <button id="navBtnTimetable" onclick="switchMainTab('timetable')" class="flex-1 py-1.5 flex flex-col items-center gap-1 text-slate-400 hover:text-white transition">
+      <span class="text-lg">📚</span>
+      <span>Rozvrh</span>
+    </button>
+    <button onclick="openDiscordModal()" class="flex-1 py-1.5 flex flex-col items-center gap-1 text-slate-400 hover:text-white transition">
+      <span class="text-lg">🔔</span>
+      <span>Discord</span>
+    </button>
+  </nav>
 
-  <!-- Discord Webhook Modal -->
-  <div id="discordModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-150">
+  <!-- MODAL: Přidat Test / Úkol -->
+  <div id="addTaskModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-4 my-auto animate-in fade-in zoom-in-95 duration-150">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg">
+            📝
+          </div>
+          <div>
+            <h3 class="font-bold text-white text-base" id="taskModalTitle">Přidat nový záznam</h3>
+            <p class="text-xs text-slate-400">Zapiš test, zkoušení nebo domácí úkol</p>
+          </div>
+        </div>
+        <button onclick="closeAddTaskModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Form Inputs -->
+      <form id="taskForm" onsubmit="handleSaveTask(event)" class="space-y-4">
+        <input type="hidden" id="editTaskId" value="">
+
+        <!-- Type Selector -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">Typ záznamu</label>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="flex items-center justify-center gap-2 p-2.5 rounded-xl border border-slate-700 bg-slate-950/60 cursor-pointer text-xs font-bold transition hover:border-rose-500 has-[:checked]:border-rose-500 has-[:checked]:bg-rose-500/15 has-[:checked]:text-rose-300">
+              <input type="radio" name="entryType" value="test" checked class="hidden">
+              <span>🔴 Test / Písemka</span>
+            </label>
+            <label class="flex items-center justify-center gap-2 p-2.5 rounded-xl border border-slate-700 bg-slate-950/60 cursor-pointer text-xs font-bold transition hover:border-amber-500 has-[:checked]:border-amber-500 has-[:checked]:bg-amber-500/15 has-[:checked]:text-amber-300">
+              <input type="radio" name="entryType" value="homework" class="hidden">
+              <span>🟡 Domácí úkol</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Subject & Hour -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Předmět C3a</label>
+            <select id="taskSubject" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
+              <option value="M">M – Matematika</option>
+              <option value="C">C – Český jazyk</option>
+              <option value="A">A – Anglický jazyk</option>
+              <option value="PV">PV – Programové vybavení</option>
+              <option value="WA">WA – Webové aplikace</option>
+              <option value="DS">DS – Databázové systémy</option>
+              <option value="PSS">PSS – Počítačové sítě a systémy</option>
+              <option value="CIT">CIT – Cvičení z informatiky</option>
+              <option value="MVH">MVH – Multimedia a vývoj her</option>
+              <option value="EK">EK – Ekonomika</option>
+              <option value="TI">TI – Teoretická informatika</option>
+              <option value="TV">TV – Tělesná výchova</option>
+              <option value="Jiné">Jiné...</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Vyučovací hodina</label>
+            <select id="taskPeriod" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
+              <option value="0">Celý den / nezáleží</option>
+              <option value="1">1. hodina (07:30 – 08:15)</option>
+              <option value="2">2. hodina (08:25 – 09:10)</option>
+              <option value="3">3. hodina (09:20 – 10:05)</option>
+              <option value="4">4. hodina (10:20 – 11:05)</option>
+              <option value="5">5. hodina (11:15 – 12:00)</option>
+              <option value="6">6. hodina (12:10 – 12:55)</option>
+              <option value="7">7. hodina (13:05 – 13:50)</option>
+              <option value="8">8. hodina (14:00 – 14:45)</option>
+              <option value="9">9. hodina (14:50 – 15:35)</option>
+              <option value="10">10. hodina (15:40 – 16:25)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Date Picker -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">Datum termínu / zkoušení</label>
+          <input 
+            type="date" 
+            id="taskDate" 
+            required 
+            class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500 font-mono"
+          />
+        </div>
+
+        <!-- Description Textarea -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">Popis / Téma / Úlohy</label>
+          <textarea 
+            id="taskDesc" 
+            rows="3" 
+            required
+            placeholder="např. Písemka: Integrály a derivace funkcí, příklady 1-15 ze sešitu" 
+            class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 resize-none"
+          ></textarea>
+        </div>
+
+        <!-- Submit & Calendar Actions -->
+        <div class="pt-2 flex flex-col sm:flex-row items-center justify-end gap-2.5 border-t border-slate-800">
+          <button 
+            type="button" 
+            onclick="closeAddTaskModal()" 
+            class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition"
+          >
+            Zrušit
+          </button>
+          <button 
+            type="submit" 
+            class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold shadow-lg shadow-amber-500/20 active:scale-95 transition"
+          >
+            Uložit záznam
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- MODAL: Discord Webhook -->
+  <div id="discordModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-5 sm:p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
             <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.078.078 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+              <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
             </svg>
           </div>
           <div>
@@ -230,26 +435,6 @@
           <div class="mt-2 text-xs text-slate-400 bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
             💡 <strong>Jak získat webhook na Discordu:</strong><br>
             Na Discord serveru klikni na ozubené kolečko u kanálu ➡️ <em>Integrace</em> ➡️ <em>Webhooks</em> ➡️ <em>Nový webhook</em> ➡️ <em>Kopírovat adresu URL</em>.
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Interval kontroly</label>
-            <select id="selectInterval" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
-              <option value="180">Každé 3 minuty</option>
-              <option value="300" selected>Každých 5 minut</option>
-              <option value="600">Každých 10 minut</option>
-              <option value="900">Každých 15 minut</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1">Stav „Příprava“</label>
-            <label class="flex items-center gap-2 mt-2 cursor-pointer text-xs text-slate-300">
-              <input type="checkbox" id="checkInWork" checked class="rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500">
-              <span>Hlásit i rozvrh v přípravě</span>
-            </label>
           </div>
         </div>
       </div>
@@ -287,7 +472,7 @@
   </div>
 
   <!-- Toast Message -->
-  <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold shadow-2xl"></div>
+  <div id="toast" class="fixed bottom-20 sm:bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold shadow-2xl"></div>
 
   <!-- Application Logic -->
   <script>
@@ -313,35 +498,65 @@
     let selectedDate = null;
     let currentGroupFilter = "all";
     let isStaticMode = false;
-    let autoRefreshTimer = null;
+    let currentTaskFilter = "all";
 
+    // --- TOAST NOTIFICATION ---
     function showToast(message, isSuccess = true) {
       const toast = document.getElementById("toast");
       toast.innerText = message;
-      toast.className = `fixed bottom-5 right-5 z-50 transform translate-y-0 opacity-100 transition-all duration-300 flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold shadow-2xl ${
+      toast.className = `fixed bottom-20 sm:bottom-5 right-5 z-50 transform translate-y-0 opacity-100 transition-all duration-300 flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold shadow-2xl ${
         isSuccess ? "bg-emerald-600 text-white" : "bg-rose-600 text-white"
       }`;
       setTimeout(() => {
-        toast.className = "fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none";
+        toast.className = "fixed bottom-20 sm:bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none";
       }, 3500);
     }
 
+    // --- TAB SWITCHING (Mobile & Desktop) ---
     function switchMainTab(mode) {
-      const btnSupl = document.getElementById("tabModeSupl");
-      const btnTt = document.getElementById("tabModeTimetable");
       const suplView = document.getElementById("suplView");
+      const tasksView = document.getElementById("tasksView");
       const ttView = document.getElementById("timetableView");
 
+      // Desktop buttons
+      const btnSuplDesk = document.getElementById("tabModeSuplDesk");
+      const btnTasksDesk = document.getElementById("tabModeTasksDesk");
+      const btnTtDesk = document.getElementById("tabModeTimetableDesk");
+
+      // Mobile buttons
+      const navBtnSupl = document.getElementById("navBtnSupl");
+      const navBtnTasks = document.getElementById("navBtnTasks");
+      const navBtnTimetable = document.getElementById("navBtnTimetable");
+
+      // Reset views
+      suplView.classList.add("hidden");
+      tasksView.classList.add("hidden");
+      ttView.classList.add("hidden");
+
+      // Reset desktop styles
+      btnSuplDesk.className = "px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1.5";
+      btnTasksDesk.className = "px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1.5";
+      btnTtDesk.className = "px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1.5";
+
+      // Reset mobile styles
+      navBtnSupl.className = "flex-1 py-1.5 flex flex-col items-center gap-1 text-slate-400 hover:text-white transition";
+      navBtnTasks.className = "flex-1 py-1.5 flex flex-col items-center gap-1 text-slate-400 hover:text-white transition relative";
+      navBtnTimetable.className = "flex-1 py-1.5 flex flex-col items-center gap-1 text-slate-400 hover:text-white transition";
+
       if (mode === "supl") {
-        btnSupl.className = "px-3 py-1 rounded-lg bg-jecna-500 text-white shadow transition";
-        btnTt.className = "px-3 py-1 rounded-lg text-slate-400 hover:text-white transition";
         suplView.classList.remove("hidden");
-        ttView.classList.add("hidden");
-      } else {
-        btnTt.className = "px-3 py-1 rounded-lg bg-jecna-500 text-white shadow transition";
-        btnSupl.className = "px-3 py-1 rounded-lg text-slate-400 hover:text-white transition";
-        suplView.classList.add("hidden");
+        btnSuplDesk.className = "px-3.5 py-1.5 rounded-lg bg-jecna-500 text-white shadow transition flex items-center gap-1.5";
+        navBtnSupl.className = "flex-1 py-1.5 flex flex-col items-center gap-1 text-jecna-400 font-bold transition";
+        renderActiveDay();
+      } else if (mode === "tasks") {
+        tasksView.classList.remove("hidden");
+        btnTasksDesk.className = "px-3.5 py-1.5 rounded-lg bg-jecna-500 text-white shadow transition flex items-center gap-1.5";
+        navBtnTasks.className = "flex-1 py-1.5 flex flex-col items-center gap-1 text-amber-400 font-bold transition relative";
+        renderTasksList();
+      } else if (mode === "timetable") {
         ttView.classList.remove("hidden");
+        btnTtDesk.className = "px-3.5 py-1.5 rounded-lg bg-jecna-500 text-white shadow transition flex items-center gap-1.5";
+        navBtnTimetable.className = "flex-1 py-1.5 flex flex-col items-center gap-1 text-jecna-400 font-bold transition";
         renderFullTimetable();
       }
     }
@@ -351,7 +566,349 @@
       renderActiveDay();
     }
 
-    // Client-side parser used when hosted statically on GitHub Pages
+    // --- LOCAL STORAGE TASKS & TESTS ---
+    function getStoredTasks() {
+      try {
+        const raw = localStorage.getItem("jecna_c3a_tasks");
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveStoredTasks(tasks) {
+      localStorage.setItem("jecna_c3a_tasks", JSON.stringify(tasks));
+      updateTaskBadges();
+    }
+
+    function updateTaskBadges() {
+      const tasks = getStoredTasks();
+      const activeCount = tasks.filter(t => !t.completed).length;
+
+      const deskBadge = document.getElementById("tasksBadgeDesk");
+      const mobBadge = document.getElementById("tasksBadgeMob");
+
+      if (activeCount > 0) {
+        deskBadge.innerText = activeCount;
+        deskBadge.classList.remove("hidden");
+        mobBadge.classList.remove("hidden");
+      } else {
+        deskBadge.classList.add("hidden");
+        mobBadge.classList.add("hidden");
+      }
+    }
+
+    function openAddTaskModal(prefillDate = null, prefillPeriod = 0, prefillSubject = null) {
+      document.getElementById("editTaskId").value = "";
+      document.getElementById("taskModalTitle").innerText = "Přidat nový záznam";
+      document.getElementById("taskForm").reset();
+
+      // Set default date to prefilled, or selected date, or tomorrow
+      if (prefillDate) {
+        document.getElementById("taskDate").value = prefillDate;
+      } else if (selectedDate) {
+        document.getElementById("taskDate").value = selectedDate;
+      } else {
+        const tom = new Date();
+        tom.setDate(tom.getDate() + 1);
+        document.getElementById("taskDate").value = tom.toISOString().split("T")[0];
+      }
+
+      if (prefillPeriod) {
+        document.getElementById("taskPeriod").value = String(prefillPeriod);
+      }
+
+      if (prefillSubject) {
+        document.getElementById("taskSubject").value = prefillSubject;
+      }
+
+      const modal = document.getElementById("addTaskModal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    function closeAddTaskModal() {
+      const modal = document.getElementById("addTaskModal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+
+    function handleSaveTask(event) {
+      event.preventDefault();
+
+      const editId = document.getElementById("editTaskId").value;
+      const type = document.querySelector('input[name="entryType"]:checked').value;
+      const subject = document.getElementById("taskSubject").value;
+      const period = parseInt(document.getElementById("taskPeriod").value, 10);
+      const date = document.getElementById("taskDate").value;
+      const desc = document.getElementById("taskDesc").value.trim();
+
+      if (!date || !desc) {
+        alert("Vyplňte prosím datum a popis.");
+        return;
+      }
+
+      const tasks = getStoredTasks();
+
+      if (editId) {
+        const idx = tasks.findIndex(t => t.id === editId);
+        if (idx !== -1) {
+          tasks[idx].type = type;
+          tasks[idx].subject = subject;
+          tasks[idx].period = period;
+          tasks[idx].date = date;
+          tasks[idx].description = desc;
+        }
+      } else {
+        const newTask = {
+          id: "task_" + Date.now(),
+          type: type,
+          subject: subject,
+          period: period,
+          date: date,
+          description: desc,
+          completed: false,
+          created_at: new Date().toISOString()
+        };
+        tasks.push(newTask);
+      }
+
+      saveStoredTasks(tasks);
+      closeAddTaskModal();
+      showToast("Záznam byl úspěšně uložen! 💾", true);
+
+      renderTasksList();
+      renderActiveDay();
+    }
+
+    function toggleTaskComplete(taskId) {
+      const tasks = getStoredTasks();
+      const task = tasks.find(t => t.id === taskId);
+      if (task) {
+        task.completed = !task.completed;
+        saveStoredTasks(tasks);
+        renderTasksList();
+        renderActiveDay();
+        showToast(task.completed ? "Úkol označen jako splněný! ✅" : "Úkol znovu otevřen.", true);
+      }
+    }
+
+    function deleteTask(taskId) {
+      if (!confirm("Opravdu chceš tento záznam smazat?")) return;
+      let tasks = getStoredTasks();
+      tasks = tasks.filter(t => t.id !== taskId);
+      saveStoredTasks(tasks);
+      renderTasksList();
+      renderActiveDay();
+      showToast("Záznam byl smazán.", true);
+    }
+
+    function editTask(taskId) {
+      const tasks = getStoredTasks();
+      const task = tasks.find(t => t.id === taskId);
+      if (!task) return;
+
+      document.getElementById("editTaskId").value = task.id;
+      document.getElementById("taskModalTitle").innerText = "Upravit záznam";
+
+      const rad = document.querySelector(`input[name="entryType"][value="${task.type}"]`);
+      if (rad) rad.checked = true;
+
+      document.getElementById("taskSubject").value = task.subject;
+      document.getElementById("taskPeriod").value = String(task.period || 0);
+      document.getElementById("taskDate").value = task.date;
+      document.getElementById("taskDesc").value = task.description;
+
+      const modal = document.getElementById("addTaskModal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    // --- CALENDAR EXPORT (.ICS & GOOGLE CALENDAR) ---
+    function openGoogleCalendar(task) {
+      const dt = task.date.replace(/-/g, "");
+      const isTest = task.type === "test";
+      const titlePrefix = isTest ? "🔴 [TEST C3a]" : "🟡 [ÚKOL C3a]";
+      const pText = task.period && task.period > 0 ? ` (${task.period}. hodina)` : "";
+      const title = encodeURIComponent(`${titlePrefix} ${task.subject}${pText}`);
+      const details = encodeURIComponent(`${task.description}\n\nPředmět: ${task.subject}\nTřída: C3a SPŠE Ječná`);
+      const location = encodeURIComponent("SPŠE Ječná, Ječná 30, Praha 2");
+
+      const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dt}/${dt}&details=${details}&location=${location}`;
+      window.open(url, "_blank");
+    }
+
+    function downloadIcs(task) {
+      const dt = task.date.replace(/-/g, "");
+      const isTest = task.type === "test";
+      const pText = task.period && task.period > 0 ? ` (${task.period}. hod)` : "";
+      const summary = `[${isTest ? 'TEST' : 'ÚKOL'} C3a] ${task.subject}${pText}: ${task.description.replace(/\n/g, ' ').slice(0, 40)}`;
+      const desc = task.description.replace(/\n/g, '\\n');
+
+      const icsLines = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//Jecna C3a//Rozvrh//CS",
+        "CALSCALE:GREGORIAN",
+        "BEGIN:VEVENT",
+        `UID:jecna-${task.id}@spsejecna.cz`,
+        `DTSTAMP:${new Date().toISOString().replace(/[-:]/g, "").split(".")[0]}Z`,
+        `DTSTART;VALUE=DATE:${dt}`,
+        `DTEND;VALUE=DATE:${dt}`,
+        `SUMMARY:${summary}`,
+        `DESCRIPTION:${desc}`,
+        "LOCATION:SPŠE Ječná, Ječná 30, Praha 2",
+        "STATUS:CONFIRMED",
+        "END:VEVENT",
+        "END:VCALENDAR"
+      ];
+
+      const blob = new Blob([icsLines.join("\r\n")], { type: "text/calendar;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${task.type}_${task.subject}_${task.date}.ics`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast("Kalendářový soubor .ics stažen! 📅", true);
+    }
+
+    // --- FILTER & RENDER TASKS LIST ---
+    function filterTasks(f) {
+      currentTaskFilter = f;
+      const btns = {
+        all: document.getElementById("btnFilterAll"),
+        test: document.getElementById("btnFilterTests"),
+        homework: document.getElementById("btnFilterHomework"),
+        completed: document.getElementById("btnFilterCompleted")
+      };
+
+      for (const [k, b] of Object.entries(btns)) {
+        if (k === f) {
+          b.className = "px-3 py-1.5 rounded-lg bg-jecna-500 text-white font-semibold whitespace-nowrap transition";
+        } else {
+          b.className = "px-3 py-1.5 rounded-lg bg-slate-900 text-slate-400 hover:text-white border border-slate-800 font-semibold whitespace-nowrap transition";
+        }
+      }
+      renderTasksList();
+    }
+
+    function renderTasksList() {
+      const container = document.getElementById("tasksListContainer");
+      const tasks = getStoredTasks();
+
+      // Counts
+      const total = tasks.length;
+      const tests = tasks.filter(t => t.type === "test" && !t.completed).length;
+      const homework = tasks.filter(t => t.type === "homework" && !t.completed).length;
+      const completed = tasks.filter(t => t.completed).length;
+
+      document.getElementById("countAll").innerText = total;
+      document.getElementById("countTests").innerText = tests;
+      document.getElementById("countHomework").innerText = homework;
+      document.getElementById("countCompleted").innerText = completed;
+
+      // Filter
+      let filtered = tasks;
+      if (currentTaskFilter === "test") {
+        filtered = tasks.filter(t => t.type === "test" && !t.completed);
+      } else if (currentTaskFilter === "homework") {
+        filtered = tasks.filter(t => t.type === "homework" && !t.completed);
+      } else if (currentTaskFilter === "completed") {
+        filtered = tasks.filter(t => t.completed);
+      }
+
+      // Sort by date ascending
+      filtered.sort((a, b) => a.date.localeCompare(b.date));
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 text-center bg-slate-900/40 border border-slate-800/80 rounded-2xl space-y-2">
+            <span class="text-3xl">🎉</span>
+            <h3 class="text-sm font-bold text-slate-300">Žádné zaznamenané testy ani úkoly</h3>
+            <p class="text-xs text-slate-500">Klikni na tlačítko výše a přidej si novou písemku nebo domácí úkol.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const todayStr = new Date().toISOString().split("T")[0];
+
+      let html = "";
+      filtered.forEach(task => {
+        const isTest = task.type === "test";
+        const isDone = task.completed;
+
+        // Friendly relative date text
+        let relDate = task.date;
+        try {
+          const diffDays = Math.round((new Date(task.date) - new Date(todayStr)) / (1000 * 60 * 60 * 24));
+          if (diffDays === 0) relDate = "🔥 Dnes!";
+          else if (diffDays === 1) relDate = "⚠️ Zítra";
+          else if (diffDays === 2) relDate = "Pozítří";
+          else if (diffDays > 2) relDate = `Za ${diffDays} dní`;
+          else if (diffDays < 0) relDate = `Před ${Math.abs(diffDays)} dny`;
+        } catch (e) {}
+
+        const pBadge = task.period && task.period > 0 ? `<span class="text-[11px] font-mono text-slate-400">${task.period}. hod</span>` : "";
+
+        html += `
+          <div class="p-4 rounded-xl border ${isDone ? 'bg-slate-950/40 border-slate-900 opacity-60' : (isTest ? 'bg-rose-950/20 border-rose-600/30' : 'bg-slate-900/80 border-slate-800')} flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3.5 transition hover:border-slate-700">
+            
+            <div class="flex items-start gap-3 w-full sm:w-auto">
+              <!-- Checkbox -->
+              <button onclick="toggleTaskComplete('${task.id}')" class="mt-0.5 w-6 h-6 rounded-lg border flex items-center justify-center shrink-0 transition ${isDone ? 'bg-emerald-500 border-emerald-500 text-slate-950' : 'border-slate-700 hover:border-slate-500 text-transparent'}" title="Označit jako splněné">
+                ✓
+              </button>
+
+              <div class="space-y-1">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${isTest ? 'bg-rose-500/20 text-rose-300' : 'bg-amber-500/20 text-amber-300'}">
+                    ${isTest ? '🔴 Test / Písemka' : '🟡 Domácí úkol'}
+                  </span>
+                  <span class="text-xs font-bold text-white bg-slate-800 px-2 py-0.5 rounded">${task.subject}</span>
+                  ${pBadge}
+                  <span class="text-[11px] font-bold text-slate-300 bg-slate-800/80 px-2 py-0.5 rounded-full">${relDate} (${task.date})</span>
+                </div>
+                <div class="text-sm text-slate-200 font-medium ${isDone ? 'line-through text-slate-500' : ''} whitespace-pre-line">${task.description}</div>
+              </div>
+            </div>
+
+            <!-- Calendar & Edit Action Buttons -->
+            <div class="flex items-center gap-1.5 self-end sm:self-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-0 border-slate-800/60 w-full sm:w-auto justify-end">
+              <!-- Google Calendar -->
+              <button onclick='openGoogleCalendar(${JSON.stringify(task)})' class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs flex items-center gap-1 active:scale-95 transition" title="Přidat do Google Kalendáře">
+                <span>📅</span>
+                <span class="hidden md:inline">Google</span>
+              </button>
+
+              <!-- .ics Download (Apple/Outlook) -->
+              <button onclick='downloadIcs(${JSON.stringify(task)})' class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs flex items-center gap-1 active:scale-95 transition" title="Stáhnout .ics pro Apple kalendář nebo Outlook">
+                <span>📥</span>
+                <span class="hidden md:inline">.ics</span>
+              </button>
+
+              <!-- Edit -->
+              <button onclick="editTask('${task.id}')" class="p-1.5 rounded-lg text-slate-400 hover:text-white transition" title="Upravit">
+                ✏️
+              </button>
+
+              <!-- Delete -->
+              <button onclick="deleteTask('${task.id}')" class="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 transition" title="Smazat">
+                🗑️
+              </button>
+            </div>
+
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // --- CLIENT SIDE SUPL PARSER (GitHub Pages Mode) ---
     function parseClientSide(rawApi, tt, targetClass = "C3a") {
       const status = rawApi.status || {};
       const schedule = rawApi.schedule || {};
@@ -446,10 +1003,11 @@
 
     async function loadSchedule(isManual = false) {
       const refreshIcon = document.getElementById("refreshIcon");
+      const refreshIconMob = document.getElementById("refreshIconMob");
       if (refreshIcon) refreshIcon.classList.add("rotate-180");
+      if (refreshIconMob) refreshIconMob.classList.add("rotate-180");
 
       try {
-        // Try local server endpoint first
         let loaded = false;
         try {
           const resp = await fetch("/api/data");
@@ -461,18 +1019,16 @@
             loaded = true;
           }
         } catch (e) {
-          // Local server not available - we are on GitHub Pages or static host!
           isStaticMode = true;
         }
 
         if (!loaded) {
-          // Standalone / GitHub Pages Mode
           isStaticMode = true;
           const [rawResp, ttResp] = await Promise.all([
             fetch("https://jecnarozvrh.jzitnik.dev/versioned/v3"),
             fetch("./timetable_c3a.json").catch(() => null)
           ]);
-          if (!rawResp.ok) throw new Error("Nelze načíst data z jecnarozvrh.jzitnik.dev");
+          if (!rawResp.ok) throw new Error("Nelze načíst data ze serveru školy");
           const rawData = await rawResp.json();
           if (ttResp && ttResp.ok) {
             timetableData = await ttResp.json();
@@ -486,9 +1042,11 @@
 
         renderDaysTabs();
         renderActiveDay();
+        renderTasksList();
+        updateTaskBadges();
 
         if (isManual) {
-          showToast("Data suplování byla úspěšně načtena! ✨", true);
+          showToast("Data suplování načtena! ✨", true);
         }
       } catch (err) {
         console.error(err);
@@ -496,9 +1054,8 @@
           showToast(`Chyba: ${err.message}`, false);
         }
       } finally {
-        if (refreshIcon) {
-          setTimeout(() => refreshIcon.classList.remove("rotate-180"), 500);
-        }
+        if (refreshIcon) setTimeout(() => refreshIcon.classList.remove("rotate-180"), 500);
+        if (refreshIconMob) setTimeout(() => refreshIconMob.classList.remove("rotate-180"), 500);
       }
     }
 
@@ -531,7 +1088,7 @@
           badgesHtml += `<span class="w-2 h-2 rounded-full ${isSelected ? 'bg-amber-300' : 'bg-amber-400'} animate-ping"></span>`;
         }
 
-        btn.className = `flex items-center gap-2 px-3.5 py-2 rounded-xl border text-sm font-semibold transition whitespace-nowrap active:scale-95 ${activeClasses}`;
+        btn.className = `flex items-center gap-2 px-3 py-2 rounded-xl border text-xs sm:text-sm font-semibold transition whitespace-nowrap active:scale-95 ${activeClasses}`;
         btn.innerHTML = `
           <span>${day.formatted_date}</span>
           ${badgesHtml ? `<div class="flex items-center gap-1">${badgesHtml}</div>` : ""}
@@ -557,12 +1114,9 @@
           </div>
         `).join('');
       } else {
-        if (filter === "1" && reg.group === "2/2") {
-          return `<span class="text-slate-500 text-xs italic">Volno pro 1. sk.</span>`;
-        }
-        if (filter === "2" && reg.group === "1/2") {
-          return `<span class="text-slate-500 text-xs italic">Volno pro 2. sk.</span>`;
-        }
+        if (filter === "1" && reg.group === "2/2") return `<span class="text-slate-500 text-xs italic">Volno pro 1. sk.</span>`;
+        if (filter === "2" && reg.group === "1/2") return `<span class="text-slate-500 text-xs italic">Volno pro 2. sk.</span>`;
+
         return `
           <div class="flex items-center justify-between text-xs">
             <span class="font-bold text-slate-200">${reg.subject}</span>
@@ -574,27 +1128,50 @@
 
     function renderActiveDay() {
       const container = document.getElementById("dayContentArea");
+      const tasksBanner = document.getElementById("dayTasksBanner");
       if (!appData || !appData.days) return;
 
       const day = appData.days.find(d => d.date === selectedDate) || appData.days[0];
       if (!day) return;
+
+      // Check tasks on this active day
+      const allTasks = getStoredTasks();
+      const dayTasks = allTasks.filter(t => t.date === day.date);
+
+      if (dayTasks.length > 0) {
+        tasksBanner.className = "p-3.5 sm:p-4 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-200 text-xs sm:text-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5";
+        tasksBanner.innerHTML = `
+          <div class="flex items-center gap-2.5">
+            <span class="text-lg">📌</span>
+            <div>
+              <strong class="text-white">Na tento den máš ${dayTasks.length} ${dayTasks.length === 1 ? 'záznam' : 'záznamy'}:</strong>
+              <span class="text-amber-300/90 ml-1">${dayTasks.map(t => `${t.type === 'test' ? '🔴' : '🟡'} ${t.subject} (${t.description})`).join(', ')}</span>
+            </div>
+          </div>
+          <button onclick="switchMainTab('tasks')" class="px-3 py-1 rounded-lg bg-amber-500 text-slate-950 font-bold text-xs shrink-0 self-end sm:self-auto">
+            Zobrazit úkoly
+          </button>
+        `;
+      } else {
+        tasksBanner.className = "hidden";
+      }
 
       let html = "";
 
       // 1. HERO BANNER
       if (day.class_actions && day.class_actions.length > 0) {
         html += `
-          <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent border border-amber-500/30 shadow-xl">
-            <div class="flex items-start gap-4">
-              <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-2xl shrink-0">
+          <div class="p-4 sm:p-6 rounded-2xl bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent border border-amber-500/30 shadow-xl">
+            <div class="flex items-start gap-3 sm:gap-4">
+              <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl sm:text-2xl shrink-0">
                 🚩
               </div>
-              <div class="space-y-1.5">
+              <div class="space-y-1">
                 <div class="flex items-center gap-2">
-                  <span class="text-xs font-bold uppercase tracking-wider text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded">Mimořádná akce pro C3a</span>
-                  ${day.in_work ? '<span class="text-xs text-amber-300/80 bg-amber-500/20 px-2 py-0.5 rounded">Rozvrh v přípravě</span>' : ''}
+                  <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded">Mimořádná akce pro C3a</span>
+                  ${day.in_work ? '<span class="text-[10px] sm:text-xs text-amber-300/80 bg-amber-500/20 px-2 py-0.5 rounded">Příprava</span>' : ''}
                 </div>
-                <h3 class="text-lg sm:text-xl font-bold text-white">${day.class_actions.join('<br>')}</h3>
+                <h3 class="text-base sm:text-xl font-bold text-white">${day.class_actions.join('<br>')}</h3>
                 <p class="text-xs sm:text-sm text-slate-300">Vyučování pro C3a je upraveno z důvodu plánované exkurze či školní akce.</p>
               </div>
             </div>
@@ -602,17 +1179,17 @@
         `;
       } else if (day.changes && day.changes.length > 0) {
         html += `
-          <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-jecna-500/20 via-jecna-500/10 to-transparent border border-jecna-500/30 shadow-xl">
-            <div class="flex items-start gap-4">
-              <div class="w-12 h-12 rounded-xl bg-jecna-500/20 text-jecna-400 flex items-center justify-center text-2xl shrink-0">
+          <div class="p-4 sm:p-6 rounded-2xl bg-gradient-to-r from-jecna-500/20 via-jecna-500/10 to-transparent border border-jecna-500/30 shadow-xl">
+            <div class="flex items-start gap-3 sm:gap-4">
+              <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-jecna-500/20 text-jecna-400 flex items-center justify-center text-xl sm:text-2xl shrink-0">
                 ⚡
               </div>
               <div class="space-y-1">
                 <div class="flex items-center gap-2">
-                  <span class="text-xs font-bold uppercase tracking-wider text-jecna-400 bg-jecna-400/10 px-2 py-0.5 rounded">Změny v rozvrhu</span>
-                  ${day.in_work ? '<span class="text-xs text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded">Příprava</span>' : ''}
+                  <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-jecna-400 bg-jecna-400/10 px-2 py-0.5 rounded">Změny v rozvrhu</span>
+                  ${day.in_work ? '<span class="text-[10px] sm:text-xs text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded">Příprava</span>' : ''}
                 </div>
-                <h3 class="text-lg sm:text-xl font-bold text-white">Pro třídu C3a je evidováno ${day.changes.length} ${day.changes.length === 1 ? 'suplování' : 'suplování'}</h3>
+                <h3 class="text-base sm:text-xl font-bold text-white">Pro třídu C3a je evidováno ${day.changes.length} ${day.changes.length === 1 ? 'suplování' : 'suplování'}</h3>
                 <p class="text-xs sm:text-sm text-slate-300">Zkontrolujte si níže uvedené hodiny s porovnáním původního předmětu.</p>
               </div>
             </div>
@@ -620,17 +1197,17 @@
         `;
       } else {
         html += `
-          <div class="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-emerald-500/15 via-emerald-500/5 to-transparent border border-emerald-500/25 shadow-xl">
-            <div class="flex items-center gap-4">
-              <div class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-2xl shrink-0">
+          <div class="p-4 sm:p-6 rounded-2xl bg-gradient-to-r from-emerald-500/15 via-emerald-500/5 to-transparent border border-emerald-500/25 shadow-xl">
+            <div class="flex items-center gap-3 sm:gap-4">
+              <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl sm:text-2xl shrink-0">
                 ✨
               </div>
               <div>
                 <div class="flex items-center gap-2 mb-0.5">
-                  <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded">Bez suplování</span>
-                  ${day.in_work ? '<span class="text-xs text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded">Příprava</span>' : '<span class="text-xs text-emerald-300/80">Definitivní stav</span>'}
+                  <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded">Bez suplování</span>
+                  ${day.in_work ? '<span class="text-[10px] sm:text-xs text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded">Příprava</span>' : '<span class="text-[10px] sm:text-xs text-emerald-300/80">Definitivní</span>'}
                 </div>
-                <h3 class="text-lg sm:text-xl font-bold text-white">Třída C3a se učí podle stálého rozvrhu hodin</h3>
+                <h3 class="text-base sm:text-xl font-bold text-white">Třída C3a se učí podle stálého rozvrhu hodin</h3>
                 <p class="text-xs sm:text-sm text-slate-400">Všechny hodiny probíhají beze změn podle oficiálního rozvrhu níže.</p>
               </div>
             </div>
@@ -642,13 +1219,15 @@
       html += `
         <div class="space-y-3">
           <div class="flex items-center justify-between">
-            <h2 class="text-base font-bold text-slate-200 flex items-center gap-2">
+            <h2 class="text-sm sm:text-base font-bold text-slate-200 flex items-center gap-2">
               <span>📅 Rozvrh hodin na ${day.formatted_date}</span>
             </h2>
-            <span class="text-xs text-slate-400 font-mono">1.–10. vyučovací hodina</span>
+            <button onclick="openAddTaskModal('${day.date}')" class="text-xs text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1">
+              <span>+ Přidat test/úkol na tento den</span>
+            </button>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 sm:gap-3">
       `;
 
       day.periods_grid.forEach(p => {
@@ -656,6 +1235,18 @@
         let cardBg = "bg-slate-900/60 border-slate-800/80";
         let badgeHtml = "";
         let bodyHtml = "";
+
+        // Check if there is a test or homework on this specific period
+        const periodTasks = dayTasks.filter(t => t.period === p.period);
+        let taskBadgesHtml = "";
+        if (periodTasks.length > 0) {
+          taskBadgesHtml = periodTasks.map(t => `
+            <div class="mt-1 p-1 rounded bg-amber-500/20 border border-amber-500/40 text-[10px] text-amber-200 flex items-center gap-1">
+              <span>${t.type === 'test' ? '🔴 TEST' : '🟡 ÚKOL'}:</span>
+              <span class="truncate font-medium">${t.description}</span>
+            </div>
+          `).join('');
+        }
 
         if (change) {
           if (change.type === "cancelled") {
@@ -665,7 +1256,8 @@
               <div class="space-y-1">
                 <div class="text-[11px] text-slate-400">Původně mělo být:</div>
                 <div class="text-xs text-slate-300 line-through opacity-70">${formatRegularItem(p.regular, currentGroupFilter)}</div>
-                <div class="mt-1 font-bold text-sm text-rose-300">${change.clean_text}</div>
+                <div class="mt-1 font-bold text-xs sm:text-sm text-rose-300">${change.clean_text}</div>
+                ${taskBadgesHtml}
               </div>
             `;
           } else if (change.type === "event") {
@@ -673,6 +1265,7 @@
             badgeHtml = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 uppercase">Akce</span>`;
             bodyHtml = `
               <div class="font-semibold text-xs text-amber-200 whitespace-pre-line">${change.raw_text}</div>
+              ${taskBadgesHtml}
             `;
           } else {
             cardBg = "bg-jecna-950/60 border-jecna-500/40 text-jecna-200";
@@ -682,6 +1275,7 @@
                 <div class="text-[11px] text-slate-400">Původně:</div>
                 <div class="text-xs text-slate-300">${formatRegularItem(p.regular, currentGroupFilter)}</div>
                 <div class="pt-1 border-t border-jecna-500/20 text-xs font-bold text-white whitespace-pre-line">${change.raw_text}</div>
+                ${taskBadgesHtml}
               </div>
             `;
           }
@@ -690,20 +1284,21 @@
           bodyHtml = `
             <div class="py-0.5 space-y-1">
               ${formatRegularItem(p.regular, currentGroupFilter)}
+              ${taskBadgesHtml}
             </div>
           `;
         }
 
         html += `
-          <div class="p-3.5 rounded-xl border ${cardBg} flex flex-col justify-between gap-2.5 transition hover:border-slate-600">
-            <div class="flex items-center justify-between border-b border-slate-800/60 pb-2">
-              <span class="font-bold text-sm text-slate-200">${p.label}</span>
+          <div class="p-3 sm:p-3.5 rounded-xl border ${cardBg} flex flex-col justify-between gap-2 transition hover:border-slate-600">
+            <div class="flex items-center justify-between border-b border-slate-800/60 pb-1.5">
+              <span class="font-bold text-xs sm:text-sm text-slate-200">${p.label}</span>
               <div class="flex items-center gap-1.5">
                 ${badgeHtml}
                 <span class="text-[10px] font-mono text-slate-400">${p.time}</span>
               </div>
             </div>
-            <div class="min-h-[46px] flex flex-col justify-center">
+            <div class="min-h-[42px] flex flex-col justify-center">
               ${bodyHtml}
             </div>
           </div>
@@ -721,13 +1316,13 @@
 
       if (absences.length > 0 || hasOtherActions) {
         html += `
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
             <!-- Absent teachers -->
-            <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3">
-              <h3 class="text-sm font-bold text-slate-200 flex items-center gap-2">
+            <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-2.5">
+              <h3 class="text-xs sm:text-sm font-bold text-slate-200 flex items-center gap-2">
                 <span>📋 Chybějící vyučující (${absences.length})</span>
               </h3>
-              <div class="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto pr-1">
+              <div class="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto pr-1">
                 ${absences.map(ab => {
                   const name = ab.teacher || ab.teacherCode || "Učitel";
                   let note = "";
@@ -738,7 +1333,7 @@
                     else note = `${ab.hours}. h`;
                   }
                   return `
-                    <span class="px-2.5 py-1 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-300 flex items-center gap-1.5">
+                    <span class="px-2 py-1 rounded-lg bg-slate-800 border border-slate-700 text-xs text-slate-300 flex items-center gap-1.5">
                       <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
                       <strong>${name}</strong>
                       ${note ? `<span class="text-slate-500 text-[11px]">(${note})</span>` : ''}
@@ -749,11 +1344,11 @@
             </div>
 
             <!-- Other general school actions -->
-            <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3">
-              <h3 class="text-sm font-bold text-slate-200 flex items-center gap-2">
+            <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 sm:p-5 space-y-2.5">
+              <h3 class="text-xs sm:text-sm font-bold text-slate-200 flex items-center gap-2">
                 <span>🏫 Ostatní akce školy</span>
               </h3>
-              <div class="space-y-1.5 text-xs text-slate-300 max-h-48 overflow-y-auto pr-1">
+              <div class="space-y-1 text-xs text-slate-300 max-h-40 overflow-y-auto pr-1">
                 ${hasOtherActions ? day.all_actions.map(act => `
                   <div class="p-2 rounded-lg bg-slate-800/40 border border-slate-800/80">
                     • ${act}
@@ -812,7 +1407,7 @@
 
         for (let p = 1; p <= 10; p++) {
           const item = dayPeriods[String(p)];
-          bodyHtml += `<td class="p-1.5 border-l border-slate-800/60 text-center align-middle min-w-[75px]">`;
+          bodyHtml += `<td class="p-1.5 border-l border-slate-800/60 text-center align-middle min-w-[70px]">`;
 
           if (item) {
             if (Array.isArray(item)) {
@@ -859,13 +1454,12 @@
       table.innerHTML = headerHtml + bodyHtml + "</tbody>";
     }
 
-    // Modal & Discord configuration
+    // --- DISCORD MODAL & WEBHOOK ---
     async function openDiscordModal() {
       const modal = document.getElementById("discordModal");
       modal.classList.remove("hidden");
       modal.classList.add("flex");
 
-      // Check localStorage first, then try /api/config
       const localWebhook = localStorage.getItem("jecna_c3a_webhook") || "";
       document.getElementById("inputWebhookUrl").value = localWebhook;
 
@@ -877,12 +1471,8 @@
             if (cfg.discord_webhook_url) {
               document.getElementById("inputWebhookUrl").value = cfg.discord_webhook_url;
             }
-            document.getElementById("selectInterval").value = cfg.check_interval_seconds || 300;
-            document.getElementById("checkInWork").checked = cfg.notify_on_in_work !== false;
           }
-        } catch (e) {
-          console.error(e);
-        }
+        } catch (e) {}
       }
     }
 
@@ -895,8 +1485,6 @@
 
     async function saveDiscordSettings() {
       const webhookUrl = document.getElementById("inputWebhookUrl").value.trim();
-      const interval = parseInt(document.getElementById("selectInterval").value, 10);
-      const inWork = document.getElementById("checkInWork").checked;
       const alertBox = document.getElementById("modalAlertBox");
 
       localStorage.setItem("jecna_c3a_webhook", webhookUrl);
@@ -906,25 +1494,18 @@
           const resp = await fetch("/api/config", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              discord_webhook_url: webhookUrl,
-              check_interval_seconds: interval,
-              notify_on_in_work: inWork
-            })
+            body: JSON.stringify({ discord_webhook_url: webhookUrl })
           });
-
           const res = await resp.json();
           if (res.success) {
-            showToast("Nastavení Discordu bylo uloženo! ✅", true);
+            showToast("Nastavení Discordu uloženo! ✅", true);
             closeDiscordModal();
             return;
           }
-        } catch (err) {
-          console.warn("Server config save failed, saved to browser storage instead.", err);
-        }
+        } catch (err) {}
       }
 
-      showToast("Webhook URL byl uložen do prohlížeče! ✅", true);
+      showToast("Webhook URL uložen do prohlížeče! ✅", true);
       closeDiscordModal();
     }
 
@@ -944,60 +1525,39 @@
       alertBox.classList.add("hidden");
 
       try {
-        if (!isStaticMode) {
-          const resp = await fetch("/api/test-discord", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              discord_webhook_url: webhookUrl,
-              date: selectedDate
-            })
-          });
-          const res = await resp.json();
-          if (res.success) {
-            alertBox.innerText = "🎉 Testovací zpráva byla úspěšně odeslána na váš Discord server!";
-            alertBox.className = "p-3 rounded-xl text-xs font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 block";
-            showToast("Zpráva na Discord odeslána! 🚀", true);
-            return;
-          } else {
-            throw new Error(res.error || "Chyba při odesílání");
-          }
+        const day = (appData && appData.days) ? (appData.days.find(d => d.date === selectedDate) || appData.days[0]) : null;
+        const dateStr = day ? day.formatted_date : "Dnes";
+
+        const payload = {
+          username: "Ječná Supl – C3a",
+          embeds: [{
+            title: `🧪 [TEST] Suplování C3a – ${dateStr}`,
+            color: 3447003,
+            description: "Testovací zpráva přímo z mobilní webové aplikace Suplování Ječná.",
+            fields: [
+              {
+                name: "📌 Stav",
+                value: day && day.class_actions.length > 0 ? day.class_actions.join("\n") : "Rozvrh bez evidovaných změn.",
+                inline: false
+              }
+            ],
+            footer: { text: "SPŠE Ječná C3a • Webová aplikace" },
+            timestamp: new Date().toISOString()
+          }]
+        };
+
+        const dResp = await fetch(webhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (dResp.ok) {
+          alertBox.innerText = "🎉 Testovací zpráva byla úspěšně odeslána na tvůj Discord server!";
+          alertBox.className = "p-3 rounded-xl text-xs font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 block";
+          showToast("Zpráva na Discord odeslána! 🚀", true);
         } else {
-          // Direct send from browser (CORS is supported by Discord Webhooks!)
-          const day = (appData && appData.days) ? (appData.days.find(d => d.date === selectedDate) || appData.days[0]) : null;
-          const dateStr = day ? day.formatted_date : "Dnes";
-
-          const payload = {
-            username: "Ječná Supl – C3a",
-            embeds: [{
-              title: `🧪 [TEST] Suplování C3a – ${dateStr}`,
-              color: 3447003,
-              description: "Testovací zpráva přímo z webové aplikace Suplování Ječná.",
-              fields: [
-                {
-                  name: "📌 Stav",
-                  value: day && day.class_actions.length > 0 ? day.class_actions.join("\n") : "Rozvrh bez evidovaných změn.",
-                  inline: false
-                }
-              ],
-              footer: { text: "SPŠE Ječná C3a • GitHub Web App" },
-              timestamp: new Date().toISOString()
-            }]
-          };
-
-          const dResp = await fetch(webhookUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-          });
-
-          if (dResp.ok) {
-            alertBox.innerText = "🎉 Testovací zpráva byla úspěšně odeslána na tvůj Discord server!";
-            alertBox.className = "p-3 rounded-xl text-xs font-medium bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 block";
-            showToast("Zpráva na Discord odeslána! 🚀", true);
-          } else {
-            throw new Error(`Discord vrátil kód ${dResp.status}`);
-          }
+          throw new Error(`Discord vrátil stavový kód ${dResp.status}`);
         }
       } catch (err) {
         alertBox.innerText = `Chyba: ${err.message}`;
@@ -1010,7 +1570,7 @@
 
     window.onload = () => {
       loadSchedule();
-      autoRefreshTimer = setInterval(() => loadSchedule(false), 180000);
+      setInterval(() => loadSchedule(false), 180000);
     };
   </script>
 </body>
