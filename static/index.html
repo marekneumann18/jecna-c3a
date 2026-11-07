@@ -59,6 +59,24 @@
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-jecna-500 selection:text-white pb-20 sm:pb-8">
+  <!-- Přihlašovací blok (zobrazí se, pokud uživatel není přihlášen) -->
+<div id="login-box" style="margin: 20px 0; padding: 15px; background: #1e293b; border-radius: 8px; color: white; max-width: 300px;">
+  <h3>Administrace</h3>
+  <p style="font-size: 14px; color: #94a3b8;">Zadej PIN pro zobrazení správy:</p>
+  <input type="password" id="pin-input" placeholder="Zadej PIN" style="padding: 8px; width: 100%; box-sizing: border-box; margin-bottom: 10px; border-radius: 4px; border: 1px solid #475569; background: #0f172a; color: white;">
+  <button onclick="overitPin()" style="padding: 8px 15px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; width: 100%;">Přihlásit se</button>
+  <p id="error-msg" style="color: #ef4444; font-size: 12px; margin-top: 5px; display: none;">Nesprávný PIN!</p>
+</div>
+
+<!-- Chráněný obsah (formuláře, tlačítka pro úpravy, objednávky atd.) -->
+<div id="admin-content" style="display: none;">
+  <!-- Sem vlož své existující formuláře pro úkoly, obědy a administraci -->
+  <div style="background: #0f172a; padding: 15px; border-radius: 8px; margin-top: 20px; color: white;">
+    <h3>Správa a úpravy (Chráněno)</h3>
+    <p>Zde jsou tvoje formuláře pro přidávání úkolů a objednávání obědů.</p>
+    <button onclick="odhlasitSe()" style="padding: 5px 10px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px;">Odhlásit</button>
+  </div>
+</div>
 
   <!-- Top Navigation Bar -->
   <header class="border-b border-slate-800/80 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40">
@@ -476,6 +494,43 @@
 
   <!-- Application Logic -->
   <script>
+    // Cílový PIN (můžeš si jej libovolně změnit)
+const SPRAVNY_PIN = "1234";
+
+// Funkce pro kontrolu PINu při načtení stránky
+document.addEventListener("DOMContentLoaded", function() {
+  const jePrihlasen = sessionStorage.getItem("admin_auth");
+  
+  if (jePrihlasen === "true") {
+    odemknoutAdmin();
+  }
+});
+
+// Funkce pro ověření zadaného PINu
+function overitPin() {
+  const zadeanyPin = document.getElementById("pin-input").value;
+  const errorMsg = document.getElementById("error-msg");
+
+  if (zadeanyPin === SPRAVNY_PIN) {
+    sessionStorage.setItem("admin_auth", "true");
+    odemknoutAdmin();
+  } else {
+    errorMsg.style.display = "block";
+    document.getElementById("pin-input").value = "";
+  }
+}
+
+// Funkce pro přepnutí viditelnosti prvků po úspěšném přihlášení
+function odemknoutAdmin() {
+  document.getElementById("login-box").style.display = "none";
+  document.getElementById("admin-content").style.display = "block";
+}
+
+// Funkce pro odhlášení
+function odhlasitSe() {
+  sessionStorage.removeItem("admin_auth");
+  location.reload(); // Obnoví stránku a znovu uzamkne obsah
+}
     const PERIOD_TIMES = [
       ["1. hodina", "07:30 – 08:15"],
       ["2. hodina", "08:25 – 09:10"],
