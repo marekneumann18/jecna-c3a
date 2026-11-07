@@ -84,6 +84,9 @@
           <button id="tabModeSuplDesk" onclick="switchMainTab('supl')" class="px-3.5 py-1.5 rounded-lg bg-jecna-500 text-white shadow transition flex items-center gap-1.5">
             <span>⚡ Suplování</span>
           </button>
+          <button id="tabModeCanteenDesk" onclick="switchMainTab('canteen')" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1.5">
+            <span>🍽️ Obědy</span>
+          </button>
           <button id="tabModeTasksDesk" onclick="switchMainTab('tasks')" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1.5">
             <span>📝 Testy & Úkoly</span>
             <span id="tasksBadgeDesk" class="hidden px-1.5 py-0.2 rounded-full text-[10px] bg-amber-500/30 text-amber-300 font-bold">0</span>
@@ -99,6 +102,12 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
           </svg>
           <span>Přidat test/úkol</span>
+        </button>
+
+        <!-- Admin Lock Button -->
+        <button id="adminAuthBtnDesk" onclick="toggleAdminAuth()" class="px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/80 text-xs font-semibold flex items-center gap-1.5 transition active:scale-95" title="Správa a administrace">
+          <span id="adminLockIconDesk">🔒</span>
+          <span id="adminLockLabelDesk">PIN</span>
         </button>
 
         <!-- Discord Button -->
@@ -162,7 +171,46 @@
       </div>
     </div>
 
-    <!-- 2. TESTY & ÚKOLY VIEW -->
+
+    <!-- 2. OBĚDY VIEW (iCanteen) -->
+    <div id="canteenView" class="hidden space-y-5">
+      <!-- Section Header -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl shrink-0">
+            🍽️
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-base sm:text-lg font-bold text-white">Školní obědy iCanteen</h2>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">Ječná / Sokolská</span>
+            </div>
+            <p class="text-xs text-slate-400">Nabídka obědů s reálnými fotkami pokrmů, cenou a alergeny</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <a href="https://strav.nasejidelna.cz/0341/login" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 active:scale-95 transition">
+            <span>Přejít na iCanteen (Objednat)</span>
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Canteen Days Navigation Tabs -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-1.5 scroll-smooth no-scrollbar border-b border-slate-800" id="canteenDaysContainer">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Meals Cards Grid -->
+      <div id="canteenMealsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- 3. TESTY & ÚKOLY VIEW -->
     <div id="tasksView" class="hidden space-y-5">
       <!-- Section Header -->
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-slate-900/80 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl">
@@ -258,22 +306,86 @@
   <nav class="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 border-t border-slate-800/90 backdrop-blur-lg px-2 py-1 safe-bottom flex items-center justify-around text-center text-[10px] font-semibold">
     <button id="navBtnSupl" onclick="switchMainTab('supl')" class="flex-1 py-1.5 flex flex-col items-center gap-1 text-jecna-400 transition">
       <span class="text-lg">⚡</span>
-      <span>Suplování</span>
+      <span>Supl</span>
+    </button>
+    <button id="navBtnCanteen" onclick="switchMainTab('canteen')" class="flex-1 py-1.5 flex flex-col items-center gap-1 text-slate-400 hover:text-white transition">
+      <span class="text-lg">🍽️</span>
+      <span>Obědy</span>
     </button>
     <button id="navBtnTasks" onclick="switchMainTab('tasks')" class="flex-1 py-1.5 flex flex-col items-center gap-1 text-slate-400 hover:text-white transition relative">
       <span class="text-lg">📝</span>
-      <span>Testy & Úkoly</span>
-      <span id="tasksBadgeMob" class="hidden absolute top-1 right-5 w-2 h-2 rounded-full bg-amber-400"></span>
+      <span>Testy</span>
+      <span id="tasksBadgeMob" class="hidden absolute top-1 right-3 w-2 h-2 rounded-full bg-amber-400"></span>
     </button>
     <button id="navBtnTimetable" onclick="switchMainTab('timetable')" class="flex-1 py-1.5 flex flex-col items-center gap-1 text-slate-400 hover:text-white transition">
       <span class="text-lg">📚</span>
       <span>Rozvrh</span>
     </button>
-    <button onclick="openDiscordModal()" class="flex-1 py-1.5 flex flex-col items-center gap-1 text-slate-400 hover:text-white transition">
-      <span class="text-lg">🔔</span>
-      <span>Discord</span>
+    <button id="navBtnAdmin" onclick="toggleAdminAuth()" class="flex-1 py-1.5 flex flex-col items-center gap-1 text-slate-400 hover:text-white transition">
+      <span id="adminLockIconMob" class="text-lg">🔒</span>
+      <span id="adminLockLabelMob">Admin</span>
     </button>
   </nav>
+
+  <!-- MODAL: PIN Authentication -->
+  <div id="pinModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-5 sm:p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-150">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl font-bold">
+            🔐
+          </div>
+          <div>
+            <h3 class="font-bold text-white text-base">Ověření správce</h3>
+            <p class="text-xs text-slate-400">Zadej PIN pro správu C3a</p>
+          </div>
+        </div>
+        <button onclick="closePinModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <form id="pinForm" onsubmit="handleVerifyPin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1.5">Administrátorský PIN</label>
+          <input 
+            type="password" 
+            id="pinInputModal" 
+            placeholder="••••" 
+            maxlength="10" 
+            inputmode="numeric"
+            pattern="[0-9]*"
+            required
+            class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-3 text-center text-2xl tracking-[0.5em] text-white placeholder-slate-600 focus:outline-none focus:border-jecna-500 font-mono"
+          />
+          <p id="pinErrorMsg" class="hidden text-xs text-rose-400 mt-2 font-medium flex items-center gap-1">
+            <span>⚠️ Nesprávný PIN! Zkus to znovu.</span>
+          </p>
+          <p class="text-[11px] text-slate-500 mt-2 text-center">
+            Výchozí PIN pro třídu C3a je <span class="font-mono text-slate-400 font-bold">1234</span>
+          </p>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-800">
+          <button 
+            type="button" 
+            onclick="closePinModal()" 
+            class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold"
+          >
+            Zrušit
+          </button>
+          <button 
+            type="submit" 
+            class="px-5 py-2 rounded-xl bg-jecna-500 hover:bg-jecna-600 text-white text-xs font-bold shadow-lg shadow-jecna-500/25 active:scale-95 transition"
+          >
+            Odemknout
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- MODAL: Přidat Test / Úkol -->
   <div id="addTaskModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4 overflow-y-auto">
@@ -439,6 +551,30 @@
         </div>
       </div>
 
+      
+        <!-- Admin PIN settings -->
+        <div class="border-t border-slate-800 pt-3">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+            🔑 Administrátorský PIN
+          </label>
+          <div class="flex items-center gap-2">
+            <input 
+              type="password" 
+              id="inputNewAdminPin" 
+              placeholder="Nový PIN (výchozí: 1234)" 
+              class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 font-mono"
+            />
+            <button 
+              type="button" 
+              onclick="saveNewAdminPin()" 
+              class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 whitespace-nowrap active:scale-95"
+            >
+              Uložit PIN
+            </button>
+          </div>
+          <p class="text-[11px] text-slate-500 mt-1">Chrání přidávání a mazání testů před nepovolanými úpravami.</p>
+        </div>
+
       <div id="modalAlertBox" class="hidden p-3 rounded-xl text-xs font-medium"></div>
 
       <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-800">
@@ -512,34 +648,153 @@
       }, 3500);
     }
 
+    // --- ADMIN SECURITY & PIN AUTHENTICATION ---
+    function getAdminPin() {
+      return localStorage.getItem("c3a_admin_pin") || "1234";
+    }
+
+    function isAdminAuthenticated() {
+      return sessionStorage.getItem("c3a_admin_auth") === "true";
+    }
+
+    let pendingAdminAction = null;
+
+    function requireAdmin(action) {
+      if (isAdminAuthenticated()) {
+        action();
+      } else {
+        pendingAdminAction = action;
+        openPinModal();
+      }
+    }
+
+    function openPinModal() {
+      const modal = document.getElementById("pinModal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+      const input = document.getElementById("pinInputModal");
+      input.value = "";
+      document.getElementById("pinErrorMsg").classList.add("hidden");
+      setTimeout(() => input.focus(), 150);
+    }
+
+    function closePinModal() {
+      const modal = document.getElementById("pinModal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+      pendingAdminAction = null;
+    }
+
+    function handleVerifyPin(e) {
+      e.preventDefault();
+      const input = document.getElementById("pinInputModal").value.trim();
+      const currentPin = getAdminPin();
+
+      if (input === currentPin) {
+        sessionStorage.setItem("c3a_admin_auth", "true");
+        closePinModal();
+        updateAdminUi();
+        showToast("Úspěšně přihlášen jako správce! 🔓", true);
+        if (pendingAdminAction) {
+          const act = pendingAdminAction;
+          pendingAdminAction = null;
+          act();
+        }
+      } else {
+        const errMsg = document.getElementById("pinErrorMsg");
+        errMsg.classList.remove("hidden");
+        const pinInput = document.getElementById("pinInputModal");
+        pinInput.value = "";
+        pinInput.classList.add("border-rose-500");
+        setTimeout(() => pinInput.classList.remove("border-rose-500"), 1500);
+      }
+    }
+
+    function toggleAdminAuth() {
+      if (isAdminAuthenticated()) {
+        if (confirm("Opravdu se chceš odhlásit ze správy C3a?")) {
+          sessionStorage.removeItem("c3a_admin_auth");
+          updateAdminUi();
+          showToast("Správa byla uzamčena (odhlášeno). 🔒", true);
+        }
+      } else {
+        openPinModal();
+      }
+    }
+
+    function updateAdminUi() {
+      const isAuth = isAdminAuthenticated();
+      const deskIcon = document.getElementById("adminLockIconDesk");
+      const deskLabel = document.getElementById("adminLockLabelDesk");
+      const deskBtn = document.getElementById("adminAuthBtnDesk");
+      const mobIcon = document.getElementById("adminLockIconMob");
+      const mobLabel = document.getElementById("adminLockLabelMob");
+
+      if (isAuth) {
+        if (deskIcon) deskIcon.innerText = "🔓";
+        if (deskLabel) deskLabel.innerText = "Admin";
+        if (deskBtn) deskBtn.className = "px-2.5 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-semibold flex items-center gap-1.5 transition active:scale-95";
+        if (mobIcon) mobIcon.innerText = "🔓";
+        if (mobLabel) mobLabel.innerText = "Odhlásit";
+      } else {
+        if (deskIcon) deskIcon.innerText = "🔒";
+        if (deskLabel) deskLabel.innerText = "PIN";
+        if (deskBtn) deskBtn.className = "px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/80 text-xs font-semibold flex items-center gap-1.5 transition active:scale-95";
+        if (mobIcon) mobIcon.innerText = "🔒";
+        if (mobLabel) mobLabel.innerText = "Admin";
+      }
+    }
+
+    function saveNewAdminPin() {
+      if (!isAdminAuthenticated()) {
+        showToast("Pro změnu PINu se nejprve přihlas současným PINem!", false);
+        openPinModal();
+        return;
+      }
+      const newPin = document.getElementById("inputNewAdminPin").value.trim();
+      if (!newPin || newPin.length < 3) {
+        showToast("PIN musí mít alespoň 3 znaky/číslice!", false);
+        return;
+      }
+      localStorage.setItem("c3a_admin_pin", newPin);
+      document.getElementById("inputNewAdminPin").value = "";
+      showToast("Administrátorský PIN byl změněn! 🔑", true);
+    }
+
     // --- TAB SWITCHING (Mobile & Desktop) ---
     function switchMainTab(mode) {
       const suplView = document.getElementById("suplView");
+      const canteenView = document.getElementById("canteenView");
       const tasksView = document.getElementById("tasksView");
       const ttView = document.getElementById("timetableView");
 
       // Desktop buttons
       const btnSuplDesk = document.getElementById("tabModeSuplDesk");
+      const btnCanteenDesk = document.getElementById("tabModeCanteenDesk");
       const btnTasksDesk = document.getElementById("tabModeTasksDesk");
       const btnTtDesk = document.getElementById("tabModeTimetableDesk");
 
       // Mobile buttons
       const navBtnSupl = document.getElementById("navBtnSupl");
+      const navBtnCanteen = document.getElementById("navBtnCanteen");
       const navBtnTasks = document.getElementById("navBtnTasks");
       const navBtnTimetable = document.getElementById("navBtnTimetable");
 
       // Reset views
       suplView.classList.add("hidden");
+      if (canteenView) canteenView.classList.add("hidden");
       tasksView.classList.add("hidden");
       ttView.classList.add("hidden");
 
       // Reset desktop styles
       btnSuplDesk.className = "px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1.5";
+      if (btnCanteenDesk) btnCanteenDesk.className = "px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1.5";
       btnTasksDesk.className = "px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1.5";
       btnTtDesk.className = "px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition flex items-center gap-1.5";
 
       // Reset mobile styles
       navBtnSupl.className = "flex-1 py-1.5 flex flex-col items-center gap-1 text-slate-400 hover:text-white transition";
+      if (navBtnCanteen) navBtnCanteen.className = "flex-1 py-1.5 flex flex-col items-center gap-1 text-slate-400 hover:text-white transition";
       navBtnTasks.className = "flex-1 py-1.5 flex flex-col items-center gap-1 text-slate-400 hover:text-white transition relative";
       navBtnTimetable.className = "flex-1 py-1.5 flex flex-col items-center gap-1 text-slate-400 hover:text-white transition";
 
@@ -548,6 +803,12 @@
         btnSuplDesk.className = "px-3.5 py-1.5 rounded-lg bg-jecna-500 text-white shadow transition flex items-center gap-1.5";
         navBtnSupl.className = "flex-1 py-1.5 flex flex-col items-center gap-1 text-jecna-400 font-bold transition";
         renderActiveDay();
+      } else if (mode === "canteen") {
+        if (canteenView) canteenView.classList.remove("hidden");
+        if (btnCanteenDesk) btnCanteenDesk.className = "px-3.5 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold shadow transition flex items-center gap-1.5";
+        if (navBtnCanteen) navBtnCanteen.className = "flex-1 py-1.5 flex flex-col items-center gap-1 text-amber-400 font-bold transition";
+        renderCanteenTabs();
+        renderCanteenMeals();
       } else if (mode === "tasks") {
         tasksView.classList.remove("hidden");
         btnTasksDesk.className = "px-3.5 py-1.5 rounded-lg bg-jecna-500 text-white shadow transition flex items-center gap-1.5";
@@ -599,6 +860,12 @@
     }
 
     function openAddTaskModal(prefillDate = null, prefillPeriod = 0, prefillSubject = null) {
+      requireAdmin(() => {
+        actualOpenAddTaskModal(prefillDate, prefillPeriod, prefillSubject);
+      });
+    }
+
+    function actualOpenAddTaskModal(prefillDate = null, prefillPeriod = 0, prefillSubject = null) {
       document.getElementById("editTaskId").value = "";
       document.getElementById("taskModalTitle").innerText = "Přidat nový záznam";
       document.getElementById("taskForm").reset();
@@ -694,16 +961,24 @@
     }
 
     function deleteTask(taskId) {
-      if (!confirm("Opravdu chceš tento záznam smazat?")) return;
-      let tasks = getStoredTasks();
-      tasks = tasks.filter(t => t.id !== taskId);
-      saveStoredTasks(tasks);
-      renderTasksList();
-      renderActiveDay();
-      showToast("Záznam byl smazán.", true);
+      requireAdmin(() => {
+        if (!confirm("Opravdu chceš tento záznam smazat?")) return;
+        let tasks = getStoredTasks();
+        tasks = tasks.filter(t => t.id !== taskId);
+        saveStoredTasks(tasks);
+        renderTasksList();
+        renderActiveDay();
+        showToast("Záznam byl smazán. 🗑️", true);
+      });
     }
 
     function editTask(taskId) {
+      requireAdmin(() => {
+        actualEditTask(taskId);
+      });
+    }
+
+    function actualEditTask(taskId) {
       const tasks = getStoredTasks();
       const task = tasks.find(t => t.id === taskId);
       if (!task) return;
@@ -1568,8 +1843,170 @@
       }
     }
 
+
+    // --- ICANTEEN LUNCHES & IMAGES ---
+    let canteenData = [];
+    let selectedCanteenDate = null;
+
+    async function loadCanteenMenu() {
+      try {
+        let data = null;
+        try {
+          const resp = await fetch("/api/menu");
+          if (resp.ok) data = await resp.json();
+        } catch (e) {}
+
+        if (!data || !Array.isArray(data) || data.length === 0) {
+          const respStatic = await fetch("./canteen_menu.json");
+          if (respStatic.ok) data = await respStatic.json();
+        }
+
+        if (data && Array.isArray(data) && data.length > 0) {
+          canteenData = data;
+          if (!selectedCanteenDate) {
+            selectedCanteenDate = data[0].date;
+          }
+          renderCanteenTabs();
+          renderCanteenMeals();
+        }
+      } catch (err) {
+        console.warn("[canteen] Failed to load canteen menu:", err);
+      }
+    }
+
+    function renderCanteenTabs() {
+      const container = document.getElementById("canteenDaysContainer");
+      if (!container || !canteenData || !canteenData.length) return;
+
+      container.innerHTML = "";
+      canteenData.forEach((day, index) => {
+        const isSelected = day.date === selectedCanteenDate;
+        const btn = document.createElement("button");
+        btn.onclick = () => {
+          selectedCanteenDate = day.date;
+          renderCanteenTabs();
+          renderCanteenMeals();
+        };
+
+        const activeClasses = isSelected
+          ? "bg-amber-500 text-slate-950 font-bold shadow-lg shadow-amber-500/20 border-amber-400/40"
+          : "bg-slate-900/80 hover:bg-slate-800 text-slate-300 border-slate-800";
+
+        btn.className = `flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition whitespace-nowrap active:scale-95 ${activeClasses}`;
+        btn.innerHTML = `
+          <span>${day.formattedDate || day.date}</span>
+          ${index === 0 ? '<span class="text-[10px] px-1 py-0.2 rounded bg-black/20">Dnes</span>' : ''}
+        `;
+        container.appendChild(btn);
+      });
+    }
+
+    function renderCanteenMeals() {
+      const container = document.getElementById("canteenMealsContainer");
+      if (!container) return;
+
+      if (!canteenData || !canteenData.length) {
+        container.innerHTML = `
+          <div class="col-span-full p-8 text-center bg-slate-900/40 border border-slate-800 rounded-2xl text-slate-400">
+            <span class="text-3xl block mb-2">🍽️</span>
+            <p class="font-medium text-sm">Jídelníček pro toto období se načítá nebo není k dispozici.</p>
+            <a href="https://strav.nasejidelna.cz/0341/login" target="_blank" class="mt-3 inline-flex items-center gap-1 text-xs text-amber-400 hover:underline font-semibold">
+              Otevřít iCanteen přímo ↗
+            </a>
+          </div>
+        `;
+        return;
+      }
+
+      const currentDay = canteenData.find(d => d.date === selectedCanteenDate) || canteenData[0];
+      if (!currentDay || !currentDay.meals || !currentDay.meals.length) {
+        container.innerHTML = `
+          <div class="col-span-full p-8 text-center bg-slate-900/40 border border-slate-800 rounded-2xl text-slate-400">
+            <span class="text-3xl block mb-2">🥣</span>
+            <p class="font-medium text-sm">Pro vybraný den (${selectedCanteenDate}) nejsou zapsány žádné obědy.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = "";
+      currentDay.meals.forEach(meal => {
+        const allergensList = (meal.allergens && meal.allergens.length > 0)
+          ? meal.allergens.map(a => `<span class="px-1.5 py-0.5 rounded bg-slate-800/90 text-slate-300 border border-slate-700/60 text-[10px]" title="${a.description}">${a.code}: ${a.description}</span>`).join(" ")
+          : `<span class="text-slate-500 text-[11px]">Neuvedeny</span>`;
+
+        html += `
+          <div class="bg-slate-900/80 border border-slate-800 rounded-2xl overflow-hidden shadow-xl flex flex-col hover:border-slate-700 transition group">
+            <!-- Meal Image Header -->
+            <div class="relative h-48 sm:h-52 w-full bg-slate-950 overflow-hidden">
+              <img 
+                src="${meal.imageUrl || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80'}" 
+                alt="${meal.name}"
+                class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80'"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+              
+              <!-- Badges on image -->
+              <div class="absolute top-3 left-3 flex items-center gap-1.5">
+                <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 shadow">
+                  ${meal.category || 'Oběd'}
+                </span>
+                <span class="px-2 py-0.5 rounded-lg text-[11px] font-semibold bg-slate-900/90 text-slate-200 border border-slate-700/80 backdrop-blur">
+                  ${meal.location || 'Ječná'}
+                </span>
+              </div>
+
+              <div class="absolute top-3 right-3">
+                <span class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-500/90 text-white shadow backdrop-blur">
+                  ${meal.price || '40.00 Kč'}
+                </span>
+              </div>
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
+              <div>
+                <h3 class="font-bold text-white text-base sm:text-lg leading-snug group-hover:text-amber-400 transition">
+                  ${meal.name}
+                </h3>
+              </div>
+
+              <!-- Allergens & Order Action -->
+              <div class="space-y-3 pt-2 border-t border-slate-800/80">
+                <div>
+                  <span class="text-[11px] uppercase tracking-wider text-slate-400 font-bold block mb-1">Alergeny:</span>
+                  <div class="flex flex-wrap gap-1">
+                    ${allergensList}
+                  </div>
+                </div>
+
+                <div class="pt-1 flex items-center justify-between">
+                  <span class="text-xs text-slate-400 font-mono">Číslo: <strong>${meal.id}</strong></span>
+                  <a 
+                    href="https://strav.nasejidelna.cz/0341/login" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs font-semibold border border-amber-500/30 flex items-center gap-1.5 transition active:scale-95"
+                  >
+                    <span>Objednat v iCanteen</span>
+                    <span>↗</span>
+                  </a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
     window.onload = () => {
       loadSchedule();
+      loadCanteenMenu();
+      updateAdminUi();
       setInterval(() => loadSchedule(false), 180000);
     };
   </script>
