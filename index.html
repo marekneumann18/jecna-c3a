@@ -11,6 +11,55 @@
   <meta name="apple-mobile-web-app-title" content="Supl C3a">
 
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Firebase SDK – sdílené úkoly pro celou třídu C3a -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    // =====================================================================
+    // FIREBASE CONFIG – vlož sem svou konfiguraci z Firebase konzole
+    // Návod: https://console.firebase.google.com/ → Project settings → Your apps → Web
+    // =====================================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyAlwM5AbACXjujp4wRLHw1Pb2pm1J9q910",
+      authDomain: "jecna-c3a.firebaseapp.com",
+      projectId: "jecna-c3a",
+      storageBucket: "jecna-c3a.firebasestorage.app",
+      messagingSenderId: "249632930321",
+      appId: "1:249632930321:web:192996191509e3013e8fb0",
+      measurementId: "G-SH1S2G42E6"
+    };
+    // =====================================================================
+
+    try {
+      const fbApp = initializeApp(firebaseConfig);
+      const db = getFirestore(fbApp);
+      const tasksCol = collection(db, 'tasks');
+
+      // Expose to global scope (main script tag uses regular functions)
+      window._fbDb = db;
+      window._fbTasksCol = tasksCol;
+      window._fbFns = { addDoc, doc, updateDoc, deleteDoc };
+      window._fbReady = true;
+
+      // Real-time listener – automaticky aktualizuje úkoly pro všechny uživatele
+      const q = query(tasksCol, orderBy('created_at', 'asc'));
+      onSnapshot(q, (snapshot) => {
+        window._sharedTasks = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+        // Zavolej render funkce pokud již existují
+        if (window.updateTaskBadges) window.updateTaskBadges();
+        if (window.renderTasksList) window.renderTasksList();
+        if (window.renderActiveDay) window.renderActiveDay();
+      }, (err) => {
+        console.error('[Firebase] Chyba při načítání úkolů:', err);
+        window._fbReady = false;
+      });
+    } catch (err) {
+      console.error('[Firebase] Inicializace selhala:', err);
+      window._fbReady = false;
+    }
+  </script>
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -628,8 +677,13 @@
       renderActiveDay();
     }
 
-    // --- LOCAL STORAGE TASKS & TESTS ---
+    // --- SDÍLENÉ ÚKOLY (Firebase Firestore) s localStorage zálohou ---
     function getStoredTasks() {
+      // Použij Firebase data pokud jsou dostupná
+      if (window._sharedTasks && window._fbReady) {
+        return window._sharedTasks;
+      }
+      // Záloha: localStorage (funguje i offline nebo bez Firebase)
       try {
         const raw = localStorage.getItem("jecna_c3a_tasks");
         return raw ? JSON.parse(raw) : [];
@@ -639,6 +693,7 @@
     }
 
     function saveStoredTasks(tasks) {
+      // Vždy záloha do localStorage
       localStorage.setItem("jecna_c3a_tasks", JSON.stringify(tasks));
       updateTaskBadges();
     }
@@ -659,6 +714,10 @@
         mobBadge.classList.add("hidden");
       }
     }
+
+    // Expose updateTaskBadges globally for Firebase listener
+    window.updateTaskBadges = updateTaskBadges;
+
 
     function openAddTaskModal(prefillDate = null, prefillPeriod = 0, prefillSubject = null) {
       document.getElementById("editTaskId").value = "";
@@ -695,7 +754,7 @@
       modal.classList.remove("flex");
     }
 
-    function handleSaveTask(event) {
+    async function handleSaveTask(event) {
       event.preventDefault();
 
       const editId = document.getElementById("editTaskId").value;
@@ -710,60 +769,105 @@
         return;
       }
 
-      const tasks = getStoredTasks();
+      // Deaktivuj tlačítko během ukládání
+      const submitBtn = event.target.querySelector('[type="submit"]');
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = "⏳ Ukládám..."; }
 
-      if (editId) {
-        const idx = tasks.findIndex(t => t.id === editId);
-        if (idx !== -1) {
-          tasks[idx].type = type;
-          tasks[idx].subject = subject;
-          tasks[idx].period = period;
-          tasks[idx].date = date;
-          tasks[idx].description = desc;
+      try {
+        if (window._fbReady && window._fbTasksCol) {
+          // === FIREBASE – sdílené ukládání pro celou třídu ===
+          const { addDoc, doc, updateDoc } = window._fbFns;
+          if (editId) {
+            const taskRef = doc(window._fbDb, 'tasks', editId);
+            await updateDoc(taskRef, { type, subject, period, date, description: desc });
+          } else {
+            await addDoc(window._fbTasksCol, {
+              type, subject, period, date,
+              description: desc,
+              completed: false,
+              created_at: new Date().toISOString()
+            });
+          }
+          // renderTasksList se zavolá automaticky přes onSnapshot listener
+        } else {
+          // === ZÁLOHA: localStorage ===
+          const tasks = getStoredTasks();
+          if (editId) {
+            const idx = tasks.findIndex(t => t.id === editId);
+            if (idx !== -1) {
+              tasks[idx] = { ...tasks[idx], type, subject, period, date, description: desc };
+            }
+          } else {
+            tasks.push({
+              id: "task_" + Date.now(),
+              type, subject, period, date,
+              description: desc,
+              completed: false,
+              created_at: new Date().toISOString()
+            });
+          }
+          saveStoredTasks(tasks);
+          renderTasksList();
+          renderActiveDay();
         }
-      } else {
-        const newTask = {
-          id: "task_" + Date.now(),
-          type: type,
-          subject: subject,
-          period: period,
-          date: date,
-          description: desc,
-          completed: false,
-          created_at: new Date().toISOString()
-        };
-        tasks.push(newTask);
+
+        closeAddTaskModal();
+        showToast("Záznam uložen pro celou třídu C3a! 💾", true);
+      } catch (err) {
+        console.error('[Firebase] Chyba při ukládání:', err);
+        showToast("Chyba při ukládání: " + err.message, false);
+      } finally {
+        if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = "Uložit záznam"; }
       }
-
-      saveStoredTasks(tasks);
-      closeAddTaskModal();
-      showToast("Záznam byl úspěšně uložen! 💾", true);
-
-      renderTasksList();
-      renderActiveDay();
     }
 
-    function toggleTaskComplete(taskId) {
+    async function toggleTaskComplete(taskId) {
       const tasks = getStoredTasks();
       const task = tasks.find(t => t.id === taskId);
-      if (task) {
-        task.completed = !task.completed;
-        saveStoredTasks(tasks);
-        renderTasksList();
-        renderActiveDay();
-        showToast(task.completed ? "Úkol označen jako splněný! ✅" : "Úkol znovu otevřen.", true);
+      if (!task) return;
+
+      const newCompleted = !task.completed;
+
+      try {
+        if (window._fbReady && window._fbDb) {
+          const { doc, updateDoc } = window._fbFns;
+          const taskRef = doc(window._fbDb, 'tasks', taskId);
+          await updateDoc(taskRef, { completed: newCompleted });
+          // UI aktualizuje onSnapshot
+        } else {
+          task.completed = newCompleted;
+          saveStoredTasks(tasks);
+          renderTasksList();
+          renderActiveDay();
+        }
+        showToast(newCompleted ? "Úkol označen jako splněný! ✅" : "Úkol znovu otevřen.", true);
+      } catch (err) {
+        showToast("Chyba: " + err.message, false);
       }
     }
 
-    function deleteTask(taskId) {
-      if (!confirm("Opravdu chceš tento záznam smazat?")) return;
-      let tasks = getStoredTasks();
-      tasks = tasks.filter(t => t.id !== taskId);
-      saveStoredTasks(tasks);
-      renderTasksList();
-      renderActiveDay();
-      showToast("Záznam byl smazán. 🗑️", true);
+    async function deleteTask(taskId) {
+      if (!confirm("Opravdu chceš tento záznam smazat? Smaže se pro celou třídu!")) return;
+
+      try {
+        if (window._fbReady && window._fbDb) {
+          const { doc, deleteDoc } = window._fbFns;
+          const taskRef = doc(window._fbDb, 'tasks', taskId);
+          await deleteDoc(taskRef);
+          // UI aktualizuje onSnapshot
+        } else {
+          let tasks = getStoredTasks();
+          tasks = tasks.filter(t => t.id !== taskId);
+          saveStoredTasks(tasks);
+          renderTasksList();
+          renderActiveDay();
+        }
+        showToast("Záznam byl smazán. 🗑️", true);
+      } catch (err) {
+        showToast("Chyba: " + err.message, false);
+      }
     }
+
 
     function editTask(taskId) {
       const tasks = getStoredTasks();
@@ -1790,11 +1894,16 @@
       container.innerHTML = html;
     }
 
+    // Expose render funkce pro Firebase onSnapshot listener
+    window.renderTasksList = renderTasksList;
+    window.renderActiveDay = renderActiveDay;
+
     window.onload = () => {
       loadSchedule();
       loadCanteenMenu();
       setInterval(() => loadSchedule(false), 180000);
     };
   </script>
+
 </body>
 </html>
