@@ -36,7 +36,7 @@
       {
         "id": "obid-2",
         "name": "Čočková, Škubánky s mákem",
-        "imageUrl": "https://www.toprecepty.cz/fotky/recepty/0126/skubanky-s-makem-a-skubankove-smazenky-196735-1920-1080.jpg",
+        "imageUrl": "https://www.ekucharka.cz/obrazky/recepty/3199/3069/skubanky-s-makem-L.jpg",
         "price": "40.00 Kč",
         "category": "Oběd 2",
         "location": "Ječná",
@@ -60,7 +60,7 @@
       {
         "id": "obid-1",
         "name": "Rybí, Bramborový guláš s uzeninou, chléb",
-        "imageUrl": "https://www.tradicnirecepty.cz/www/files/thumbs/files/recipe/201210/2691-4478-1350328882.1196968630.1490012934.jpg",
+        "imageUrl": "https://1gr.cz/tempimg/fb/2019/3/ona/KIT7a290b_bauer_mediadrpl_2016_50930_101811141.jpg",
         "price": "40.00 Kč",
         "category": "Oběd 1",
         "location": "Ječná",
@@ -152,7 +152,7 @@
       {
         "id": "obid-2",
         "name": "Husí kaldoun, Svatomartinská trhaná husa, hlávkové zelí, houskové knedlíky",
-        "imageUrl": "https://catandcook.cz/wp-content/uploads/2016/11/nahled-husa-1024x768.jpg",
+        "imageUrl": "https://i.pinimg.com/736x/2a/c2/50/2ac250acc3150738e210d658aa882a2c.jpg",
         "price": "40.00 Kč",
         "category": "Oběd 2",
         "location": "Ječná",
@@ -184,7 +184,7 @@
       {
         "id": "obid-1",
         "name": "Uzená s kroupami, Drůbkové rizoto, rajčatový salát",
-        "imageUrl": "https://www.receptyjidla.cz/wp-content/uploads/2022/12/rajcatovy_salat_pochoutkovy.jpg",
+        "imageUrl": "https://rozvoz.bazalkahk.cz/obr/normal/letni_zeleninove_spaldoto_s_hlivou_ustricnou.jpg",
         "price": "40.00 Kč",
         "category": "Oběd 1",
         "location": "Ječná",
@@ -238,7 +238,7 @@
       {
         "id": "obid-1",
         "name": "Karotkový krém, Uzené maso , hrachová kaše, okurka kyselá",
-        "imageUrl": "https://bonvivani.sk/sites/default/files/styles/1024_x_640/public/2021-02/4705.jpg?itok=YP4jArZ5",
+        "imageUrl": "https://bramboracka.wz.cz/wp-content/uploads/2021/04/Hrachova-kase-uzene-Oldriska-2048x1536.jpg",
         "price": "40.00 Kč",
         "category": "Oběd 1",
         "location": "Ječná",
@@ -260,7 +260,7 @@
       {
         "id": "obid-2",
         "name": "Karotkový krém, Sekaná pečeně, bramborový salát",
-        "imageUrl": "https://detskestesti.s14.cdn-upgates.com/l/l693aafc4cabbb-bramborovy-salat-cz.png",
+        "imageUrl": "https://i.pinimg.com/originals/23/f3/52/23f352d51e65c61b7ba674104467da2b.jpg",
         "price": "40.00 Kč",
         "category": "Oběd 2",
         "location": "Ječná",
@@ -296,7 +296,7 @@
       {
         "id": "obid-1",
         "name": "S krupicí a vejcem, Rybí file na citrusech, salát z barevné čočky",
-        "imageUrl": "https://cdn.tescoma.com/content/wysiwyg/CZ_B2C/Blog/2025/RECEPTY KKZ JARO 2025/1137x760_salat-barevna-cocka.jpg",
+        "imageUrl": "https://vkuchyni.com/wp-content/uploads/2025/03/IMG_12221-1024x683-1-960x540.jpg",
         "price": "40.00 Kč",
         "category": "Oběd 1",
         "location": "Ječná",
@@ -370,7 +370,7 @@
       {
         "id": "obid-1",
         "name": "Celerová, Kuře na paprice s těstovinou",
-        "imageUrl": "https://i.pinimg.com/736x/b7/20/bb/b720bbe67348949f29fa5b9cb88af5b2.jpg",
+        "imageUrl": "https://1gr.cz/fotky/idnes/23/123/r7/BAP_40130_103658456.jpg",
         "price": "40.00 Kč",
         "category": "Oběd 1",
         "location": "Ječná",
@@ -428,7 +428,7 @@
       {
         "id": "obid-1",
         "name": "Slepičí vývar se zeleninou , Moravský vrabec, bramborové knedlíky, špenát",
-        "imageUrl": "https://primainspirace.cz/wp-content/uploads/2025/11/plnene-knedliky-3.jpg",
+        "imageUrl": "https://www.receptyonline.cz/wp-content/uploads/2015/04/214917vrabec-knedlik-zeli-mika.jpg",
         "price": "40.00 Kč",
         "category": "Oběd 1",
         "location": "Ječná",
@@ -454,7 +454,7 @@
       {
         "id": "obid-2",
         "name": "Slepičí vývar se zeleninou , Zapečené brambory s brokolicí",
-        "imageUrl": "https://www.jidlo.cz/vvv/cz/brambory-zapecene-s-brokolici-a-syrem.jpg",
+        "imageUrl": "https://magazin-kleopatra.cz/wp-content/uploads/2023/07/jednoduchy-recept-zapeene-brambory-s-brokolici_1.jpg",
         "price": "40.00 Kč",
         "category": "Oběd 2",
         "location": "Ječná",
@@ -516,6 +516,288 @@
           {
             "code": "7",
             "description": "Mléko  a  výrobky  z  něj"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2026-11-23",
+    "formattedDate": "pondělí 23.11.2026",
+    "meals": [
+      {
+        "id": "obid-1",
+        "name": "Česneková s vejcem a bramborem , Gnocchi v sýrové omáčce",
+        "imageUrl": "https://i.pinimg.com/originals/9f/9d/35/9f9d355fbf8540f713eaf03e6404cdbe.png",
+        "price": "40.00 Kč",
+        "category": "Oběd 1",
+        "location": "Ječná",
+        "allergens": [
+          {
+            "code": "1",
+            "description": "Obiloviny obsahující lepek"
+          },
+          {
+            "code": "3",
+            "description": "Vejce a výrobky z nich"
+          },
+          {
+            "code": "6",
+            "description": "Sójové boby (sója) a výrobky z nich"
+          },
+          {
+            "code": "7",
+            "description": "Mléko  a  výrobky  z  něj"
+          },
+          {
+            "code": "10",
+            "description": "Hořčice a  výrobky z ní"
+          }
+        ]
+      },
+      {
+        "id": "obid-2",
+        "name": "Česneková s vejcem a bramborem , Kuřecí kung-pao, rýže",
+        "imageUrl": "https://www.receptik.cz/wp-content/uploads/2022/09/kung-pao-6698752-scaled.jpg",
+        "price": "40.00 Kč",
+        "category": "Oběd 2",
+        "location": "Ječná",
+        "allergens": [
+          {
+            "code": "3",
+            "description": "Vejce a výrobky z nich"
+          },
+          {
+            "code": "5",
+            "description": "Podzemnice olejná (arašídy) a výrobky z nich"
+          },
+          {
+            "code": "6",
+            "description": "Sójové boby (sója) a výrobky z nich"
+          },
+          {
+            "code": "7",
+            "description": "Mléko  a  výrobky  z  něj"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2026-11-24",
+    "formattedDate": "úterý 24.11.2026",
+    "meals": [
+      {
+        "id": "obid-1",
+        "name": "Dýňová se smetanou a semínky, Penne s bylinkovým pestem a cherry rajčátky",
+        "imageUrl": "https://1gr.cz/fotky/idnes/23/112/r7/BAP_37973_103447289.jpg",
+        "price": "40.00 Kč",
+        "category": "Oběd 1",
+        "location": "Ječná",
+        "allergens": [
+          {
+            "code": "1",
+            "description": "Obiloviny obsahující lepek"
+          },
+          {
+            "code": "3",
+            "description": "Vejce a výrobky z nich"
+          },
+          {
+            "code": "7",
+            "description": "Mléko  a  výrobky  z  něj"
+          }
+        ]
+      },
+      {
+        "id": "obid-2",
+        "name": "Dýňová se smetanou a semínky, Hovězí stroganoff, brambory pečené",
+        "imageUrl": "https://static.toprecepty.cz/fotky/images/11/10459-524-295-wide.jpg",
+        "price": "40.00 Kč",
+        "category": "Oběd 2",
+        "location": "Ječná",
+        "allergens": [
+          {
+            "code": "1",
+            "description": "Obiloviny obsahující lepek"
+          },
+          {
+            "code": "7",
+            "description": "Mléko  a  výrobky  z  něj"
+          },
+          {
+            "code": "10",
+            "description": "Hořčice a  výrobky z ní"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2026-11-25",
+    "formattedDate": "středa 25.11.2026",
+    "meals": [
+      {
+        "id": "obid-1",
+        "name": "Zeleninová s kroupami, Kynuté knedlíky s ovocným přelivem, sypané tvarohem",
+        "imageUrl": "https://cooky.cz/wp-content/uploads/2026/07/tresnove-knedliky.jpg",
+        "price": "40.00 Kč",
+        "category": "Oběd 1",
+        "location": "Ječná",
+        "allergens": [
+          {
+            "code": "1",
+            "description": "Obiloviny obsahující lepek"
+          },
+          {
+            "code": "3",
+            "description": "Vejce a výrobky z nich"
+          },
+          {
+            "code": "7",
+            "description": "Mléko  a  výrobky  z  něj"
+          },
+          {
+            "code": "9",
+            "description": "Celer a výrobky z  něj"
+          }
+        ]
+      },
+      {
+        "id": "obid-2",
+        "name": "Zeleninová s kroupami, Květákové placičky, brambory vařené , tatarská omáčka",
+        "imageUrl": "https://vareni-production-cdn.xsd.cz/obrazky/recepty/20445/6a2e4e92-4ff4-44a1-9e2c-00e553ae8efe-velky.jpg",
+        "price": "40.00 Kč",
+        "category": "Oběd 2",
+        "location": "Ječná",
+        "allergens": [
+          {
+            "code": "1",
+            "description": "Obiloviny obsahující lepek"
+          },
+          {
+            "code": "3",
+            "description": "Vejce a výrobky z nich"
+          },
+          {
+            "code": "7",
+            "description": "Mléko  a  výrobky  z  něj"
+          },
+          {
+            "code": "9",
+            "description": "Celer a výrobky z  něj"
+          },
+          {
+            "code": "10",
+            "description": "Hořčice a  výrobky z ní"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2026-11-26",
+    "formattedDate": "čtvrtek 26.11.2026",
+    "meals": [
+      {
+        "id": "obid-1",
+        "name": "Krém z pečené červené řepy, Zapečené těstoviny s uzeninou, zelný salát",
+        "imageUrl": "https://www.jidlo.cz/vi/cz/zapecene-testoviny-s-uzeninou.jpg",
+        "price": "40.00 Kč",
+        "category": "Oběd 1",
+        "location": "Ječná",
+        "allergens": [
+          {
+            "code": "1",
+            "description": "Obiloviny obsahující lepek"
+          },
+          {
+            "code": "3",
+            "description": "Vejce a výrobky z nich"
+          },
+          {
+            "code": "7",
+            "description": "Mléko  a  výrobky  z  něj"
+          }
+        ]
+      },
+      {
+        "id": "obid-2",
+        "name": "Krém z pečené červené řepy, Bryndzové halušky s cibulkou",
+        "imageUrl": "https://eu.tastescdn.net/thumbor/LnRPrGqLxY0WYxfZk6dRv7_WzYk=/1050x1050/filters:quality(65):brightness(2):contrast(2):rgb(2,-2,0):sharpen(0.2,0.2,true)/sk/recipe/Mo_U_c-XuG8JFx3EjK0P/218ea5fac15becdcfda126fad5837d.jpeg",
+        "price": "40.00 Kč",
+        "category": "Oběd 2",
+        "location": "Ječná",
+        "allergens": [
+          {
+            "code": "1",
+            "description": "Obiloviny obsahující lepek"
+          },
+          {
+            "code": "7",
+            "description": "Mléko  a  výrobky  z  něj"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2026-11-27",
+    "formattedDate": "pátek 27.11.2026",
+    "meals": [
+      {
+        "id": "obid-1",
+        "name": "Hovězí s rýží, Boloňské špagety se sýrem",
+        "imageUrl": "https://www.vahojl.cz/images/galerie/hlavnijidla/bolonske_spagety_se_syrem.jpg",
+        "price": "40.00 Kč",
+        "category": "Oběd 1",
+        "location": "Ječná",
+        "allergens": [
+          {
+            "code": "1",
+            "description": "Obiloviny obsahující lepek"
+          },
+          {
+            "code": "3",
+            "description": "Vejce a výrobky z nich"
+          },
+          {
+            "code": "7",
+            "description": "Mléko  a  výrobky  z  něj"
+          },
+          {
+            "code": "9",
+            "description": "Celer a výrobky z  něj"
+          }
+        ]
+      },
+      {
+        "id": "obid-2",
+        "name": "Hovězí s rýží, Smažený vepřový řízek, bramborová kaše , okurka kyselá",
+        "imageUrl": "https://zenysro.cz/wp-content/uploads/2023/11/Veprovy-rizek-s-bramborovou-kasi.jpg",
+        "price": "40.00 Kč",
+        "category": "Oběd 2",
+        "location": "Ječná",
+        "allergens": [
+          {
+            "code": "1",
+            "description": "Obiloviny obsahující lepek"
+          },
+          {
+            "code": "3",
+            "description": "Vejce a výrobky z nich"
+          },
+          {
+            "code": "7",
+            "description": "Mléko  a  výrobky  z  něj"
+          },
+          {
+            "code": "9",
+            "description": "Celer a výrobky z  něj"
+          },
+          {
+            "code": "10",
+            "description": "Hořčice a  výrobky z ní"
           }
         ]
       }
