@@ -1,66 +1,12 @@
 [
   {
-    "date": "2026-11-12",
-    "formattedDate": "čtvrtek 12.11.2026",
-    "meals": [
-      {
-        "id": "obid-1",
-        "name": "Uzená s kroupami, Drůbkové rizoto, rajčatový salát",
-        "imageUrl": "https://rozvoz.bazalkahk.cz/obr/normal/letni_zeleninove_spaldoto_s_hlivou_ustricnou.jpg",
-        "price": "40.00 Kč",
-        "category": "Oběd 1",
-        "location": "Ječná",
-        "allergens": [
-          {
-            "code": "1",
-            "description": "Obiloviny obsahující lepek"
-          },
-          {
-            "code": "7",
-            "description": "Mléko  a  výrobky  z  něj"
-          },
-          {
-            "code": "9",
-            "description": "Celer a výrobky z  něj"
-          }
-        ]
-      },
-      {
-        "id": "obid-2",
-        "name": "Uzená s kroupami, Pečený losos na másle, smetanové brambory s cibulkou",
-        "imageUrl": "https://www.receptyschuti.cz/uploads/recipe/1758/topthumb_losos-na-masle-s-opecenym-bramborem-s-cibulkou-a-paprikou-2294.jpeg",
-        "price": "40.00 Kč",
-        "category": "Oběd 2",
-        "location": "Ječná",
-        "allergens": [
-          {
-            "code": "1",
-            "description": "Obiloviny obsahující lepek"
-          },
-          {
-            "code": "4",
-            "description": "Ryby  a výrobky  z nich"
-          },
-          {
-            "code": "7",
-            "description": "Mléko  a  výrobky  z  něj"
-          },
-          {
-            "code": "9",
-            "description": "Celer a výrobky z  něj"
-          }
-        ]
-      }
-    ]
-  },
-  {
     "date": "2026-11-13",
     "formattedDate": "pátek 13.11.2026",
     "meals": [
       {
         "id": "obid-1",
         "name": "Karotkový krém, Uzené maso , hrachová kaše, okurka kyselá",
-        "imageUrl": "https://bramboracka.wz.cz/wp-content/uploads/2021/04/Hrachova-kase-uzene-Oldriska-2048x1536.jpg",
+        "imageUrl": "https://varimedobroty.cz/wp-content/uploads/2023/06/hrachova-kase-uzene.jpg",
         "price": "40.00 Kč",
         "category": "Oběd 1",
         "location": "Ječná",
@@ -82,7 +28,7 @@
       {
         "id": "obid-2",
         "name": "Karotkový krém, Sekaná pečeně, bramborový salát",
-        "imageUrl": "https://i.pinimg.com/originals/23/f3/52/23f352d51e65c61b7ba674104467da2b.jpg",
+        "imageUrl": "https://detskestesti.s14.cdn-upgates.com/l/l693aafc4cabbb-bramborovy-salat-cz.png",
         "price": "40.00 Kč",
         "category": "Oběd 2",
         "location": "Ječná",
@@ -118,7 +64,7 @@
       {
         "id": "obid-1",
         "name": "S krupicí a vejcem, Rybí file na citrusech, salát z barevné čočky",
-        "imageUrl": "https://vkuchyni.com/wp-content/uploads/2025/03/IMG_12221-1024x683-1-960x540.jpg",
+        "imageUrl": "https://www.receptia.cz/wp-content/uploads/2021/10/ryba-s-rajcatovym-salatem-1-1024x931.jpg",
         "price": "40.00 Kč",
         "category": "Oběd 1",
         "location": "Ječná",
@@ -218,7 +164,7 @@
       {
         "id": "obid-2",
         "name": "Celerová, Žemlovka s jablky, tvarohem a sněhem",
-        "imageUrl": "https://www.nejrecept.cz/upload/54830968_685db78af57355_full.jpg",
+        "imageUrl": "https://ms1.ostium.cz/instance/web-recepty/jnetgMR5/h2048w2048p.jpg",
         "price": "40.00 Kč",
         "category": "Oběd 2",
         "location": "Ječná",
@@ -250,7 +196,7 @@
       {
         "id": "obid-1",
         "name": "Slepičí vývar se zeleninou , Moravský vrabec, bramborové knedlíky, špenát",
-        "imageUrl": "https://www.ceskazceska.cz/wp-content/uploads/2016/01/moravsky_vrabec_vypecky_ceskazceska_3.jpg",
+        "imageUrl": "https://static.toprecepty.cz/fotky/recepty/0092/moravsky-vrabec-se-smetanovym-spenatem-a-knedlikem-179027-1920-1080.jpg",
         "price": "40.00 Kč",
         "category": "Oběd 1",
         "location": "Ječná",
@@ -276,7 +222,7 @@
       {
         "id": "obid-2",
         "name": "Slepičí vývar se zeleninou , Zapečené brambory s brokolicí",
-        "imageUrl": "https://magazin-kleopatra.cz/wp-content/uploads/2023/07/jednoduchy-recept-zapeene-brambory-s-brokolici_1.jpg",
+        "imageUrl": "https://www.toprecepty.cz/fotky/recepty/0785/f2e39cd038e7beaed8874130fe7f64ee-facebook.jpg",
         "price": "40.00 Kč",
         "category": "Oběd 2",
         "location": "Ječná",
@@ -380,7 +326,7 @@
       {
         "id": "obid-2",
         "name": "Česneková s vejcem a bramborem , Kuřecí kung-pao, rýže",
-        "imageUrl": "https://media.eco-files.cz/economia/production/files/2026/02/25/09/43/18/a59d2c6d-5bf6-47f4-8afc-7a02399cb5df/kungpao-wok_small.png",
+        "imageUrl": "https://i.ytimg.com/vi/yRE_EGnbrD0/maxresdefault.jpg",
         "price": "40.00 Kč",
         "category": "Oběd 2",
         "location": "Ječná",
@@ -434,7 +380,7 @@
       {
         "id": "obid-2",
         "name": "Dýňová se smetanou a semínky, Hovězí stroganoff, brambory pečené",
-        "imageUrl": "https://static.toprecepty.cz/fotky/images/11/10459-524-295-wide.jpg",
+        "imageUrl": "https://static.toprecepty.cz/fotky/recepty/0463/hovezi-stroganov-se-zampiony-223765-1920-1080-nw.jpg",
         "price": "40.00 Kč",
         "category": "Oběd 2",
         "location": "Ječná",
@@ -462,7 +408,7 @@
       {
         "id": "obid-1",
         "name": "Zeleninová s kroupami, Kynuté knedlíky s ovocným přelivem, sypané tvarohem",
-        "imageUrl": "https://cooky.cz/wp-content/uploads/2026/07/tresnove-knedliky.jpg",
+        "imageUrl": "https://tropico.cz/wp-content/uploads/2021/10/Jogurtove-knedliky-s-ovocnym-prelivem.jpeg",
         "price": "40.00 Kč",
         "category": "Oběd 1",
         "location": "Ječná",
@@ -488,7 +434,7 @@
       {
         "id": "obid-2",
         "name": "Zeleninová s kroupami, Květákové placičky, brambory vařené , tatarská omáčka",
-        "imageUrl": "https://vareni-production-cdn.xsd.cz/obrazky/recepty/20445/6a2e4e92-4ff4-44a1-9e2c-00e553ae8efe-velky.jpg",
+        "imageUrl": "https://hotovedobroty.cz/wp-content/uploads/2024/04/P017-kvetakove-placicky-prebal.jpg",
         "price": "40.00 Kč",
         "category": "Oběd 2",
         "location": "Ječná",
@@ -546,7 +492,7 @@
       {
         "id": "obid-2",
         "name": "Krém z pečené červené řepy, Bryndzové halušky s cibulkou",
-        "imageUrl": "https://eu.tastescdn.net/thumbor/LnRPrGqLxY0WYxfZk6dRv7_WzYk=/1050x1050/filters:quality(65):brightness(2):contrast(2):rgb(2,-2,0):sharpen(0.2,0.2,true)/sk/recipe/Mo_U_c-XuG8JFx3EjK0P/218ea5fac15becdcfda126fad5837d.jpeg",
+        "imageUrl": "https://varecha.pravda.sk/usercontent/images/velky-recept6247_1302038585.jpg",
         "price": "40.00 Kč",
         "category": "Oběd 2",
         "location": "Ječná",
@@ -596,7 +542,7 @@
       {
         "id": "obid-2",
         "name": "Hovězí s rýží, Smažený vepřový řízek, bramborová kaše , okurka kyselá",
-        "imageUrl": "https://www.familymarket.cz/images/zek_s_ka_recept_web.jpg",
+        "imageUrl": "https://zenysro.cz/wp-content/uploads/2023/11/Veprovy-rizek-s-bramborovou-kasi.jpg",
         "price": "40.00 Kč",
         "category": "Oběd 2",
         "location": "Ječná",
