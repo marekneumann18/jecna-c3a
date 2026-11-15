@@ -12,18 +12,18 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Firebase SDK – sdílené úkoly pro celou třídu C3a -->
+  <!-- Firebase SDK – sdílené úkoly pro celou třídu C3a (Realtime Database) -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-    import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { getDatabase, ref, push, update, remove, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
     // =====================================================================
-    // FIREBASE CONFIG – vlož sem svou konfiguraci z Firebase konzole
-    // Návod: https://console.firebase.google.com/ → Project settings → Your apps → Web
+    // FIREBASE REALTIME DATABASE CONFIG
     // =====================================================================
     const firebaseConfig = {
       apiKey: "AIzaSyAlwM5AbACXjujp4wRLHw1Pb2pm1J9q910",
       authDomain: "jecna-c3a.firebaseapp.com",
+      databaseURL: "https://jecna-c3a-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "jecna-c3a",
       storageBucket: "jecna-c3a.firebasestorage.app",
       messagingSenderId: "249632930321",
@@ -34,29 +34,37 @@
 
     try {
       const fbApp = initializeApp(firebaseConfig);
-      const db = getFirestore(fbApp);
-      const tasksCol = collection(db, 'tasks');
+      const db = getDatabase(fbApp);
+      const tasksRef = ref(db, 'tasks');
 
-      // Expose to global scope (main script tag uses regular functions)
+      // Expose to global scope
       window._fbDb = db;
-      window._fbTasksCol = tasksCol;
-      window._fbFns = { addDoc, doc, updateDoc, deleteDoc };
+      window._fbTasksRef = tasksRef;
+      window._fbFns = { ref, push, update, remove };
       window._fbReady = true;
 
-      // Real-time listener – automaticky aktualizuje úkoly pro všechny uživatele
-      const q = query(tasksCol, orderBy('created_at', 'asc'));
-      onSnapshot(q, (snapshot) => {
-        window._sharedTasks = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-        // Zavolej render funkce pokud již existují
+      // Real-time listener – okamžitě synchronizuje úkoly pro všechny uživatele
+      onValue(tasksRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          window._sharedTasks = Object.keys(data).map(key => ({
+            id: key,
+            ...data[key]
+          })).sort((a, b) => (a.created_at || "").localeCompare(b.created_at || ""));
+        } else {
+          window._sharedTasks = [];
+        }
+
+        // Aktualizuj zobrazení
         if (window.updateTaskBadges) window.updateTaskBadges();
         if (window.renderTasksList) window.renderTasksList();
         if (window.renderActiveDay) window.renderActiveDay();
       }, (err) => {
-        console.error('[Firebase] Chyba při načítání úkolů:', err);
+        console.error('[Firebase RTDB] Chyba při načítání úkolů:', err);
         window._fbReady = false;
       });
     } catch (err) {
-      console.error('[Firebase] Inicializace selhala:', err);
+      console.error('[Firebase RTDB] Inicializace selhala:', err);
       window._fbReady = false;
     }
   </script>
@@ -774,21 +782,22 @@
       if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = "⏳ Ukládám..."; }
 
       try {
-        if (window._fbReady && window._fbTasksCol) {
-          // === FIREBASE – sdílené ukládání pro celou třídu ===
-          const { addDoc, doc, updateDoc } = window._fbFns;
+        if (window._fbReady && window._fbTasksRef) {
+          // === FIREBASE REALTIME DATABASE – sdílené ukládání pro celou třídu ===
+          const { ref, push, update } = window._fbFns;
           if (editId) {
-            const taskRef = doc(window._fbDb, 'tasks', editId);
-            await updateDoc(taskRef, { type, subject, period, date, description: desc });
+            const taskItemRef = ref(window._fbDb, 'tasks/' + editId);
+            await update(taskItemRef, { type, subject, period, date, description: desc });
           } else {
-            await addDoc(window._fbTasksCol, {
+            const newTaskRef = push(window._fbTasksRef);
+            await update(newTaskRef, {
               type, subject, period, date,
               description: desc,
               completed: false,
               created_at: new Date().toISOString()
             });
           }
-          // renderTasksList se zavolá automaticky přes onSnapshot listener
+          // renderTasksList se zavolá automaticky přes onValue listener
         } else {
           // === ZÁLOHA: localStorage ===
           const tasks = getStoredTasks();
@@ -814,7 +823,7 @@
         closeAddTaskModal();
         showToast("Záznam uložen pro celou třídu C3a! 💾", true);
       } catch (err) {
-        console.error('[Firebase] Chyba při ukládání:', err);
+        console.error('[Firebase RTDB] Chyba při ukládání:', err);
         showToast("Chyba při ukládání: " + err.message, false);
       } finally {
         if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = "Uložit záznam"; }
@@ -830,10 +839,10 @@
 
       try {
         if (window._fbReady && window._fbDb) {
-          const { doc, updateDoc } = window._fbFns;
-          const taskRef = doc(window._fbDb, 'tasks', taskId);
-          await updateDoc(taskRef, { completed: newCompleted });
-          // UI aktualizuje onSnapshot
+          const { ref, update } = window._fbFns;
+          const taskItemRef = ref(window._fbDb, 'tasks/' + taskId);
+          await update(taskItemRef, { completed: newCompleted });
+          // UI aktualizuje onValue listener
         } else {
           task.completed = newCompleted;
           saveStoredTasks(tasks);
@@ -851,10 +860,10 @@
 
       try {
         if (window._fbReady && window._fbDb) {
-          const { doc, deleteDoc } = window._fbFns;
-          const taskRef = doc(window._fbDb, 'tasks', taskId);
-          await deleteDoc(taskRef);
-          // UI aktualizuje onSnapshot
+          const { ref, remove } = window._fbFns;
+          const taskItemRef = ref(window._fbDb, 'tasks/' + taskId);
+          await remove(taskItemRef);
+          // UI aktualizuje onValue listener
         } else {
           let tasks = getStoredTasks();
           tasks = tasks.filter(t => t.id !== taskId);
