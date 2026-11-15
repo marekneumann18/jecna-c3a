@@ -79,10 +79,13 @@ module.exports = async (req, res) => {
     const html = await fetchUrl(canteenUrl);
     const dayRegex = /<div id="day-(\d{4}-\d{2}-\d{2})".*?<\/article>/gs;
     const days = [];
+    const now = new Date();
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     let match;
 
     while ((match = dayRegex.exec(html)) !== null) {
       const dateStr = match[1];
+      if (!queryDate && dateStr < todayStr) continue;
       const dayBlock = match[0];
 
       const titleM = dayBlock.match(/<div id="day-\d{4}-\d{2}-\d{2}"[^>]*>(.*?)<\/div>/s);

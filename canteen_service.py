@@ -189,9 +189,12 @@ def fetch_icanteen_menu(canteen_url: str = DEFAULT_CANTEEN_URL, location_filter:
     print(f"[canteen_service] Found {len(day_matches)} days in calendar.")
 
     results = []
+    today_str = datetime.now().strftime("%Y-%m-%d")
 
     for dm in day_matches:
         date_str = dm.group(1)
+        if date_str < today_str:
+            continue
         day_block = dm.group(0)
 
         # Extract weekday title (e.g. "pondělí 09.11.2026")

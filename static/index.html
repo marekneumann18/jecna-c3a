@@ -12,18 +12,18 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Firebase SDK – sdílené úkoly pro celou třídu C3a -->
+  <!-- Firebase SDK – sdílené úkoly pro celou třídu C3a (Realtime Database) -->
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-    import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { getDatabase, ref, push, update, remove, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
     // =====================================================================
-    // FIREBASE CONFIG – vlož sem svou konfiguraci z Firebase konzole
-    // Návod: https://console.firebase.google.com/ → Project settings → Your apps → Web
+    // FIREBASE REALTIME DATABASE CONFIG
     // =====================================================================
     const firebaseConfig = {
       apiKey: "AIzaSyAlwM5AbACXjujp4wRLHw1Pb2pm1J9q910",
       authDomain: "jecna-c3a.firebaseapp.com",
+      databaseURL: "https://jecna-c3a-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "jecna-c3a",
       storageBucket: "jecna-c3a.firebasestorage.app",
       messagingSenderId: "249632930321",
@@ -34,29 +34,37 @@
 
     try {
       const fbApp = initializeApp(firebaseConfig);
-      const db = getFirestore(fbApp);
-      const tasksCol = collection(db, 'tasks');
+      const db = getDatabase(fbApp);
+      const tasksRef = ref(db, 'tasks');
 
-      // Expose to global scope (main script tag uses regular functions)
+      // Expose to global scope
       window._fbDb = db;
-      window._fbTasksCol = tasksCol;
-      window._fbFns = { addDoc, doc, updateDoc, deleteDoc };
+      window._fbTasksRef = tasksRef;
+      window._fbFns = { ref, push, update, remove };
       window._fbReady = true;
 
-      // Real-time listener – automaticky aktualizuje úkoly pro všechny uživatele
-      const q = query(tasksCol, orderBy('created_at', 'asc'));
-      onSnapshot(q, (snapshot) => {
-        window._sharedTasks = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-        // Zavolej render funkce pokud již existují
+      // Real-time listener – okamžitě synchronizuje úkoly pro všechny uživatele
+      onValue(tasksRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          window._sharedTasks = Object.keys(data).map(key => ({
+            id: key,
+            ...data[key]
+          })).sort((a, b) => (a.created_at || "").localeCompare(b.created_at || ""));
+        } else {
+          window._sharedTasks = [];
+        }
+
+        // Aktualizuj zobrazení
         if (window.updateTaskBadges) window.updateTaskBadges();
         if (window.renderTasksList) window.renderTasksList();
         if (window.renderActiveDay) window.renderActiveDay();
       }, (err) => {
-        console.error('[Firebase] Chyba při načítání úkolů:', err);
+        console.error('[Firebase RTDB] Chyba při načítání úkolů:', err);
         window._fbReady = false;
       });
     } catch (err) {
-      console.error('[Firebase] Inicializace selhala:', err);
+      console.error('[Firebase RTDB] Inicializace selhala:', err);
       window._fbReady = false;
     }
   </script>
@@ -123,7 +131,7 @@
             <h1 class="text-base sm:text-lg font-bold tracking-tight text-white">Suplování Ječná</h1>
             <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-jecna-500/20 text-jecna-400 border border-jecna-500/30">C3a</span>
           </div>
-          <p class="text-[11px] text-slate-400 hidden sm:block">Rozvrh, testy & úkoly pro třídu C3a</p>
+          <p id="headerSubtitle" class="text-[11px] text-slate-400 hidden sm:block">Rozvrh, testy & úkoly pro třídu C3a</p>
         </div>
       </div>
 
@@ -592,6 +600,25 @@
       0: "Pondělí", 1: "Úterý", 2: "Středa", 3: "Čtvrtek", 4: "Pátek", 5: "Sobota", 6: "Neděle"
     };
 
+    // --- DATE HELPERS ---
+    function getLocalDateStr(date = new Date()) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function updateCurrentDateDisplay() {
+      const now = new Date();
+      const daysCz = ["neděle", "pondělí", "úterý", "středa", "čtvrtek", "pátek", "sobota"];
+      const dayName = daysCz[now.getDay()];
+      const dateText = `Dnes je ${dayName} ${now.getDate()}. ${now.getMonth() + 1}. ${now.getFullYear()}`;
+      const sub = document.getElementById("headerSubtitle");
+      if (sub) {
+        sub.innerHTML = `Rozvrh, testy & úkoly pro třídu C3a • <span class="text-slate-300 font-semibold">${dateText}</span>`;
+      }
+    }
+
     let appData = null;
     let timetableData = null;
     let selectedDate = null;
@@ -774,21 +801,22 @@
       if (submitBtn) { submitBtn.disabled = true; submitBtn.innerText = "⏳ Ukládám..."; }
 
       try {
-        if (window._fbReady && window._fbTasksCol) {
-          // === FIREBASE – sdílené ukládání pro celou třídu ===
-          const { addDoc, doc, updateDoc } = window._fbFns;
+        if (window._fbReady && window._fbTasksRef) {
+          // === FIREBASE REALTIME DATABASE – sdílené ukládání pro celou třídu ===
+          const { ref, push, update } = window._fbFns;
           if (editId) {
-            const taskRef = doc(window._fbDb, 'tasks', editId);
-            await updateDoc(taskRef, { type, subject, period, date, description: desc });
+            const taskItemRef = ref(window._fbDb, 'tasks/' + editId);
+            await update(taskItemRef, { type, subject, period, date, description: desc });
           } else {
-            await addDoc(window._fbTasksCol, {
+            const newTaskRef = push(window._fbTasksRef);
+            await update(newTaskRef, {
               type, subject, period, date,
               description: desc,
               completed: false,
               created_at: new Date().toISOString()
             });
           }
-          // renderTasksList se zavolá automaticky přes onSnapshot listener
+          // renderTasksList se zavolá automaticky přes onValue listener
         } else {
           // === ZÁLOHA: localStorage ===
           const tasks = getStoredTasks();
@@ -814,7 +842,7 @@
         closeAddTaskModal();
         showToast("Záznam uložen pro celou třídu C3a! 💾", true);
       } catch (err) {
-        console.error('[Firebase] Chyba při ukládání:', err);
+        console.error('[Firebase RTDB] Chyba při ukládání:', err);
         showToast("Chyba při ukládání: " + err.message, false);
       } finally {
         if (submitBtn) { submitBtn.disabled = false; submitBtn.innerText = "Uložit záznam"; }
@@ -830,10 +858,10 @@
 
       try {
         if (window._fbReady && window._fbDb) {
-          const { doc, updateDoc } = window._fbFns;
-          const taskRef = doc(window._fbDb, 'tasks', taskId);
-          await updateDoc(taskRef, { completed: newCompleted });
-          // UI aktualizuje onSnapshot
+          const { ref, update } = window._fbFns;
+          const taskItemRef = ref(window._fbDb, 'tasks/' + taskId);
+          await update(taskItemRef, { completed: newCompleted });
+          // UI aktualizuje onValue listener
         } else {
           task.completed = newCompleted;
           saveStoredTasks(tasks);
@@ -851,10 +879,10 @@
 
       try {
         if (window._fbReady && window._fbDb) {
-          const { doc, deleteDoc } = window._fbFns;
-          const taskRef = doc(window._fbDb, 'tasks', taskId);
-          await deleteDoc(taskRef);
-          // UI aktualizuje onSnapshot
+          const { ref, remove } = window._fbFns;
+          const taskItemRef = ref(window._fbDb, 'tasks/' + taskId);
+          await remove(taskItemRef);
+          // UI aktualizuje onValue listener
         } else {
           let tasks = getStoredTasks();
           tasks = tasks.filter(t => t.id !== taskId);
@@ -1000,7 +1028,7 @@
         return;
       }
 
-      const todayStr = new Date().toISOString().split("T")[0];
+      const todayStr = getLocalDateStr();
 
       let html = "";
       filtered.forEach(task => {
@@ -1010,7 +1038,11 @@
         // Friendly relative date text
         let relDate = task.date;
         try {
-          const diffDays = Math.round((new Date(task.date) - new Date(todayStr)) / (1000 * 60 * 60 * 24));
+          const [ty, tm, td] = task.date.split("-").map(Number);
+          const taskDateObj = new Date(ty, tm - 1, td);
+          const now = new Date();
+          const todayDateObj = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          const diffDays = Math.round((taskDateObj - todayDateObj) / (1000 * 60 * 60 * 24));
           if (diffDays === 0) relDate = "🔥 Dnes!";
           else if (diffDays === 1) relDate = "⚠️ Zítra";
           else if (diffDays === 2) relDate = "Pozítří";
@@ -1081,15 +1113,20 @@
       const announcements = rawApi.announcements || {};
       const ttDays = (tt && tt.timetable) ? tt.timetable : {};
 
+      const todayStr = getLocalDateStr();
       const days = [];
       for (const [dateKey, dayData] of Object.entries(schedule)) {
+        // Kdyz skonci ten den, uz ho na web nedavame
+        if (dateKey < todayStr) continue;
+
         const inWork = dayData.info ? dayData.info.inWork : false;
         const c3aChanges = (dayData.changes && dayData.changes[targetClass]) ? dayData.changes[targetClass] : Array(10).fill(null);
         const takesPlace = dayData.takesPlace || "";
         const absence = dayData.absence || [];
         const dayAnnouncements = announcements[dateKey] || [];
 
-        const dt = new Date(dateKey);
+        const [y, m, d] = dateKey.split("-").map(Number);
+        const dt = new Date(y, m - 1, d);
         const dayIdx = dt.getDay() === 0 ? 6 : dt.getDay() - 1; // 0=Mon, 4=Fri
         const regDay = ttDays[String(dayIdx)] ? ttDays[String(dayIdx)].periods : {};
 
@@ -1202,8 +1239,12 @@
           appData = parseClientSide(rawData, timetableData, "C3a");
         }
 
-        if (!selectedDate && appData.days && appData.days.length > 0) {
-          selectedDate = appData.days[0].date;
+        if (appData && appData.days && appData.days.length > 0) {
+          const todayStr = getLocalDateStr();
+          if (!selectedDate || !appData.days.some(d => d.date === selectedDate)) {
+            const todayItem = appData.days.find(d => d.date === todayStr);
+            selectedDate = todayItem ? todayItem.date : appData.days[0].date;
+          }
         }
 
         renderDaysTabs();
@@ -1229,8 +1270,18 @@
       const container = document.getElementById("daysTabsContainer");
       if (!appData || !appData.days) return;
 
+      if (appData.days.length === 0) {
+        container.innerHTML = `<span class="text-xs text-slate-500 py-2">Žádné nadcházející dny suplování</span>`;
+        return;
+      }
+
+      const todayStr = getLocalDateStr();
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrowStr = getLocalDateStr(tomorrow);
+
       container.innerHTML = "";
-      appData.days.forEach((day, index) => {
+      appData.days.forEach((day) => {
         const isSelected = day.date === selectedDate;
         const btn = document.createElement("button");
         btn.onclick = () => {
@@ -1244,8 +1295,10 @@
           : "bg-slate-900/80 hover:bg-slate-800 text-slate-300 border-slate-800";
 
         let badgesHtml = "";
-        if (index === 0) {
+        if (day.date === todayStr) {
           badgesHtml += `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'}">Dnes</span>`;
+        } else if (day.date === tomorrowStr) {
+          badgesHtml += `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${isSelected ? 'bg-blue-400/30 text-blue-100' : 'bg-blue-500/20 text-blue-300'}">Zítra</span>`;
         }
         if (day.in_work) {
           badgesHtml += `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${isSelected ? 'bg-amber-400/30 text-amber-200' : 'bg-amber-500/20 text-amber-300'}">Příprava</span>`;
@@ -1298,7 +1351,16 @@
       if (!appData || !appData.days) return;
 
       const day = appData.days.find(d => d.date === selectedDate) || appData.days[0];
-      if (!day) return;
+      if (!day) {
+        if (tasksBanner) tasksBanner.className = "hidden";
+        container.innerHTML = `
+          <div class="p-8 text-center bg-slate-900/40 border border-slate-800 rounded-2xl text-slate-400">
+            <span class="text-3xl block mb-2">📅</span>
+            <p class="font-medium text-sm">Žádný rozvrh suplování pro vybraný den není k dispozici.</p>
+          </div>
+        `;
+        return;
+      }
 
       // Check tasks on this active day
       const allTasks = getStoredTasks();
@@ -1753,9 +1815,14 @@
         }
 
         if (data && Array.isArray(data) && data.length > 0) {
-          canteenData = data;
-          if (!selectedCanteenDate) {
-            selectedCanteenDate = data[0].date;
+          const todayStr = getLocalDateStr();
+          // Skončil ten den -> už ho na web nedáváme (filtrujeme dny před dneškem)
+          const upcoming = data.filter(d => d.date >= todayStr);
+          canteenData = upcoming.length > 0 ? upcoming : data;
+
+          if (!selectedCanteenDate || !canteenData.some(d => d.date === selectedCanteenDate)) {
+            const todayItem = canteenData.find(d => d.date === todayStr);
+            selectedCanteenDate = todayItem ? todayItem.date : canteenData[0].date;
           }
           renderCanteenTabs();
           renderCanteenMeals();
@@ -1769,8 +1836,13 @@
       const container = document.getElementById("canteenDaysContainer");
       if (!container || !canteenData || !canteenData.length) return;
 
+      const todayStr = getLocalDateStr();
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrowStr = getLocalDateStr(tomorrow);
+
       container.innerHTML = "";
-      canteenData.forEach((day, index) => {
+      canteenData.forEach((day) => {
         const isSelected = day.date === selectedCanteenDate;
         const btn = document.createElement("button");
         btn.onclick = () => {
@@ -1783,10 +1855,17 @@
           ? "bg-amber-500 text-slate-950 font-bold shadow-lg shadow-amber-500/20 border-amber-400/40"
           : "bg-slate-900/80 hover:bg-slate-800 text-slate-300 border-slate-800";
 
+        let badgeHtml = "";
+        if (day.date === todayStr) {
+          badgeHtml = '<span class="text-[10px] px-1.5 py-0.5 rounded font-bold bg-black/25 text-white">Dnes</span>';
+        } else if (day.date === tomorrowStr) {
+          badgeHtml = '<span class="text-[10px] px-1.5 py-0.5 rounded font-bold bg-blue-500/20 text-blue-300">Zítra</span>';
+        }
+
         btn.className = `flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition whitespace-nowrap active:scale-95 ${activeClasses}`;
         btn.innerHTML = `
           <span>${day.formattedDate || day.date}</span>
-          ${index === 0 ? '<span class="text-[10px] px-1 py-0.2 rounded bg-black/20">Dnes</span>' : ''}
+          ${badgeHtml}
         `;
         container.appendChild(btn);
       });
@@ -1899,6 +1978,7 @@
     window.renderActiveDay = renderActiveDay;
 
     window.onload = () => {
+      updateCurrentDateDisplay();
       loadSchedule();
       loadCanteenMenu();
       setInterval(() => loadSchedule(false), 180000);

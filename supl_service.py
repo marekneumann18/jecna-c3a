@@ -117,8 +117,11 @@ def parse_schedule_for_class(raw_data, target_class="C3a"):
     subjects_map = timetable_info.get("subjects", {})
 
     parsed_days = []
+    today_str = datetime.now().strftime("%Y-%m-%d")
 
     for date_key, day_data in schedule_data.items():
+        if date_key < today_str:
+            continue
         info = day_data.get("info", {})
         in_work = info.get("inWork", False)
         all_changes = day_data.get("changes", {})
